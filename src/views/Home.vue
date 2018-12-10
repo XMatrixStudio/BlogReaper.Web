@@ -4,7 +4,7 @@
       <Sider class="sider" hide-trigger>
         <silde-menu :menu-item="menuItem"/>
       </Sider>
-      <div class="content">Content</div>
+      <div class="content"><router-view/></div>
       <!-- <Content >Content</Content> -->
     </Layout>
   </div>

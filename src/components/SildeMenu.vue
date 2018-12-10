@@ -1,16 +1,10 @@
 <template>
   <div class="home-sider">
-    <Menu
-      class="menu-this"
-      active-name="3-1"
-      theme="light"
-      width="auto"
-      @on-open-change="onOpenChange"
-    >
+    <Menu class="menu-this" active-name="0" theme="light" width="auto" @on-select="selectMenu">
       <MenuItem class="menu-first" name="0">
         <Icon type="md-clock"></Icon>今日
       </MenuItem>
-      <MenuItem name="1">
+      <MenuItem name="later">
         <Icon type="md-book"></Icon>稍后阅读
       </MenuItem>
 
@@ -91,8 +85,10 @@ export default {
   name: 'sildePage',
   props: ['menuItem'],
   methods: {
-    onOpenChange (e) {
-      console.log(e)
+    selectMenu (name) {
+      if (name === 'later') {
+        this.$router.push({ name: name })
+      }
     },
     menuDown (e, num, i) {
       // console.log(e)

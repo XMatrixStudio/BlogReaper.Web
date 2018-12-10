@@ -15,13 +15,12 @@
               <Avatar class="user-avatar" icon="ios-person"/>MegaShow
             </template>
             <div class="user-info">
-              <Avatar class="user-avatar" icon="ios-person" size="large"/>
+              <Avatar icon="ios-person" size="large"/>
               <div class="user-name">
                 <div class="sub-text sub-name">MegaShow</div>
                 <div class="sub-text">a@zhenly.cn</div>
               </div>
             </div>
-
             <div class="ivu-menu-item">个人设置</div>
             <div class="ivu-menu-item">管理阅读源</div>
             <div class="ivu-menu-item">退出登陆</div>
