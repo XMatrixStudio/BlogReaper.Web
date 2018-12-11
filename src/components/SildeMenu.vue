@@ -5,7 +5,7 @@
         <Icon type="md-clock"></Icon>今日
       </MenuItem>
       <MenuItem name="later">
-        <Icon type="md-book"></Icon>稍后阅读
+        <Icon type="md-bookmark"></Icon>稍后阅读
       </MenuItem>
 
       <div class="menu-title">Reaper

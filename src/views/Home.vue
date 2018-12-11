@@ -24,7 +24,7 @@
     width: 100%;
     min-height: 240px;
     background: #ffffffc0;
-    padding: 30px;
+    padding: 0 30px;
   }
 }
 </style>
