@@ -4,6 +4,8 @@ import Home from './views/Home.vue'
 import Index from './views/Index.vue'
 import ReadLater from './components/ReadLater.vue'
 import Today from './components/Today.vue'
+import Add from './components/Add.vue'
+import Manger from './components/Manger.vue'
 
 Vue.use(Router)
 
@@ -18,15 +20,22 @@ export default new Router({
     },
     {
       path: '/home',
-      name: 'home',
       component: Home,
       children: [{
+        path: '/manger',
+        name: 'manger',
+        component: Manger
+      }, {
+        path: '/add',
+        name: 'add',
+        component: Add
+      }, {
         path: '/later',
         name: 'later',
         component: ReadLater
       }, {
-        path: '/today',
-        name: 'today',
+        path: '',
+        name: 'home',
         component: Today
       }]
     }

@@ -1,33 +1,36 @@
 <template>
-    <Header class="nav-bar">
-      <Menu mode="horizontal" theme="dark" :active-name="menuSelect" @on-select="selectMenu">
-        <div class="layout-logo">Blog Reaper</div>
-        <MenuItem name="index">
-          <Icon type="md-home"></Icon>首页
-        </MenuItem>
-        <MenuItem name="home">
-          <Icon type="md-person"></Icon>个人
-        </MenuItem>
-        <div v-if="isLogin" class="right-menu">登陆</div>
-        <div v-if="!isLogin" class="right-menu">
-          <Submenu name="user">
-            <template slot="title">
-              <Avatar class="user-avatar" icon="ios-person"/>MegaShow
-            </template>
-            <div class="user-info">
-              <Avatar icon="ios-person" size="large"/>
-              <div class="user-name">
-                <div class="sub-text sub-name">MegaShow</div>
-                <div class="sub-text">a@zhenly.cn</div>
-              </div>
+  <Header class="nav-bar">
+    <Menu mode="horizontal" theme="dark" :active-name="menuSelect" @on-select="selectMenu">
+      <div class="layout-logo">Blog
+        <span class="logo-reaper">Reaper</span>
+        <span class="logo-reader">Reader</span>
+      </div>
+      <MenuItem name="index">
+        <Icon type="md-home"></Icon>首页
+      </MenuItem>
+      <MenuItem name="home">
+        <Icon type="md-person"></Icon>个人
+      </MenuItem>
+      <div v-if="!isLogin" class="right-menu">登陆</div>
+      <div v-if="isLogin" class="right-menu">
+        <Submenu name="user">
+          <template slot="title">
+            <Avatar class="user-avatar" icon="ios-person"/>MegaShow
+          </template>
+          <div class="user-info">
+            <Avatar icon="ios-person" size="large"/>
+            <div class="user-name">
+              <div class="sub-text sub-name">MegaShow</div>
+              <div class="sub-text">a@zhenly.cn</div>
             </div>
-            <div class="ivu-menu-item">个人设置</div>
-            <div class="ivu-menu-item">管理阅读源</div>
-            <div class="ivu-menu-item">退出登陆</div>
-          </Submenu>
-        </div>
-      </Menu>
-    </Header>
+          </div>
+          <div class="ivu-menu-item">个人设置</div>
+          <div class="ivu-menu-item">管理阅读源</div>
+          <div class="ivu-menu-item">退出登陆</div>
+        </Submenu>
+      </div>
+    </Menu>
+  </Header>
 </template>
 
 <style lang="scss">
@@ -41,6 +44,21 @@
     float: left;
     font-size: 22px;
     margin-right: 30px;
+    user-select: none;
+    .logo-reaper {
+        display: inline;
+    }
+    .logo-reader {
+      display: none;
+    }
+    &:hover {
+      .logo-reaper {
+        display: none;
+      }
+      .logo-reader {
+        display: inline;
+      }
+    }
   }
   .right-menu {
     color: rgba(255, 255, 255, 0.7);

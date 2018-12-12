@@ -1,7 +1,13 @@
 <template>
   <div class="home-sider">
-    <Menu class="menu-this" active-name="0" theme="light" width="auto" @on-select="selectMenu">
-      <MenuItem class="menu-first" name="today">
+    <Menu
+      class="menu-this"
+      :active-name="activeName"
+      theme="light"
+      width="auto"
+      @on-select="selectMenu"
+    >
+      <MenuItem class="menu-first" name="home">
         <Icon type="md-clock"></Icon>今日
       </MenuItem>
       <MenuItem name="later">
@@ -9,8 +15,8 @@
       </MenuItem>
 
       <div class="menu-title">Reaper
-        <Icon class="right-icon" type="md-settings"/>
-        <Icon class="right-icon" type="md-add"/>
+        <Icon ref="" @click="gotoManger" :class="[{'select-icon' : $route.name === 'manger'},'right-icon']" type="md-settings"/>
+        <Icon @click="gotoAdd" :class="[{'select-icon' : $route.name === 'add'},'right-icon']" type="md-add"/>
       </div>
 
       <MenuItem class="menu-all" :name="menuItem.id">{{menuItem.title}}</MenuItem>
@@ -58,6 +64,9 @@
     text-align: left;
     color: #a6a9ac;
     user-select: none;
+    .select-icon {
+      color: rgb(22, 22, 22);
+    }
     .right-icon {
       float: right;
       margin-top: 2px;
@@ -84,9 +93,24 @@
 export default {
   name: 'sildePage',
   props: ['menuItem'],
+  data () {
+    return {
+      activeName: 'home'
+    }
+  },
   methods: {
+    gotoAdd () {
+      this.$router.push({ name: 'add' })
+      this.activeName = ''
+    },
+
+    gotoManger () {
+      this.$router.push({ name: 'manger' })
+      this.activeName = ''
+    },
+
     selectMenu (name) {
-      if (name === 'later' || name === 'today') {
+      if (name === 'later' || name === 'home') {
         this.$router.push({ name: name })
       }
     },
@@ -99,6 +123,14 @@ export default {
       } else {
         this.menuItem.category[i].expand = !this.menuItem.category[i].expand
       }
+    }
+  },
+  mounted () {
+    if (['later', 'home'].indexOf(this.$route.name) !== -1) {
+      this.activeName = this.$route.name
+    }
+    if (this.$route.name === 'add') {
+
     }
   }
 }
