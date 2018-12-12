@@ -1,7 +1,8 @@
 <template>
   <Header class="nav-bar">
     <Menu mode="horizontal" theme="dark" :active-name="menuSelect" @on-select="selectMenu">
-      <div class="layout-logo">Blog
+      <div class="layout-logo">
+        Blog
         <span class="logo-reaper">Reaper</span>
         <span class="logo-reader">Reader</span>
       </div>
@@ -11,7 +12,7 @@
       <MenuItem name="home">
         <Icon type="md-person"></Icon>个人
       </MenuItem>
-      <div v-if="!isLogin" class="right-menu">登陆</div>
+      <div v-if="!isLogin" class="right-menu" @click="onClickLogin">登陆</div>
       <div v-if="isLogin" class="right-menu">
         <Submenu name="user">
           <template slot="title">
@@ -35,7 +36,7 @@
 
 <style lang="scss">
 .nav-bar {
-  z-index: 10086;
+  z-index: 999;
   position: fixed;
   width: 100%;
   .layout-logo {
@@ -46,7 +47,7 @@
     margin-right: 30px;
     user-select: none;
     .logo-reaper {
-        display: inline;
+      display: inline;
     }
     .logo-reader {
       display: none;
@@ -99,6 +100,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import gql from 'graphql-tag'
 export default {
   data () {
     return {
@@ -111,6 +113,28 @@ export default {
     })
   },
   methods: {
+    async onClickLogin () {
+      try {
+        const result = await this.$apollo.mutate({
+          mutation: gql`
+            mutation ($routeName: String!) {
+              createLoginUrl(backUrl: $routeName)
+            }
+          `,
+          variables: {
+            routeName: this.$route.name
+          }
+        })
+        window.location.href = result.data.createLoginUrl
+      } catch (e) {
+        this.$Notice.error({
+          title: '发生错误',
+          desc: e
+        })
+        console.log(e)
+      }
+    },
+
     selectMenu (name, e) {
       console.log(name, e)
       if (name === '-1') {

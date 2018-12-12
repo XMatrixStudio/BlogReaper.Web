@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Index from './views/Index.vue'
+import Login from './views/Login.vue'
 import ReadLater from './components/ReadLater.vue'
 import Today from './components/Today.vue'
 import Add from './components/Add.vue'
@@ -17,6 +18,11 @@ export default new Router({
       path: '/',
       name: 'index',
       component: Index
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     },
     {
       path: '/home',
