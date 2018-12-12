@@ -1,20 +1,19 @@
 <template>
-  <div class="read-later">
+  <div class="today-comp">
     <div class="title-box">
-      <div class="title-top">Read later</div>
-      <div class="title">稍后阅读
+      <div class="title-top">Today</div>
+      <div class="title">今日阅读
         <div class="list-control">
           <Icon class="btn-refresh" type="md-refresh"/>
           <Icon class="btn-refresh" type="ios-more"/>
         </div>
       </div>
     </div>
-    <content-card/>
   </div>
 </template>
 
 <style lang="scss">
-.read-later {
+.today-comp {
   text-align: center;
   width: 100%;
   margin: 20px auto;
@@ -36,7 +35,7 @@
       font-size: 28px;
       padding-left: 10px;
       font-weight: bold;
-      border-left: 6px solid #52c071;
+      border-left: 6px solid #34a1a5;
       i {
         vertical-align: middle;
         margin-right: 10px;
@@ -59,10 +58,3 @@
   }
 }
 </style>
-
-<script>
-import ContentCard from './ContentCard'
-export default {
-  components: { ContentCard }
-}
-</script>

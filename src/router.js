@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Index from './views/Index.vue'
 import ReadLater from './components/ReadLater.vue'
+import Today from './components/Today.vue'
 
 Vue.use(Router)
 
@@ -23,6 +24,10 @@ export default new Router({
         path: '/later',
         name: 'later',
         component: ReadLater
+      }, {
+        path: '/today',
+        name: 'today',
+        component: Today
       }]
     }
   ]

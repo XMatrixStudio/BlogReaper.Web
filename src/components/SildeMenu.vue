@@ -1,7 +1,7 @@
 <template>
   <div class="home-sider">
     <Menu class="menu-this" active-name="0" theme="light" width="auto" @on-select="selectMenu">
-      <MenuItem class="menu-first" name="0">
+      <MenuItem class="menu-first" name="today">
         <Icon type="md-clock"></Icon>今日
       </MenuItem>
       <MenuItem name="later">
@@ -86,7 +86,7 @@ export default {
   props: ['menuItem'],
   methods: {
     selectMenu (name) {
-      if (name === 'later') {
+      if (name === 'later' || name === 'today') {
         this.$router.push({ name: name })
       }
     },

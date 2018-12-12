@@ -4,7 +4,9 @@
       <Sider class="sider" hide-trigger>
         <silde-menu :menu-item="menuItem"/>
       </Sider>
-      <div class="content"><router-view/></div>
+      <div class="content">
+        <router-view/>
+      </div>
       <!-- <Content >Content</Content> -->
     </Layout>
   </div>
@@ -17,7 +19,7 @@
   position: relative;
   overflow: hidden;
   text-align: left;
-  .sider{
+  .sider {
     background: #fff;
   }
   .content {
