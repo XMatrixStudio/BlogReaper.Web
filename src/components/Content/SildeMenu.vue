@@ -140,8 +140,8 @@ export default {
     if (['later', 'home'].indexOf(this.$route.name) !== -1) {
       this.activeName = this.$route.name
     }
-    if (this.$route.name === 'add') {
-
+    if (['add', 'manger'].indexOf(this.$route.name) !== -1) {
+      this.activeName = ''
     }
   }
 }

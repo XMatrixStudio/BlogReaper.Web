@@ -1,7 +1,6 @@
 <template>
   <div class="manger-comp">
-    <title-bar title-en="Organize Sources" title-cn="阅读源管理" @on-refresh="refresh"  title-color="#e7a4c4"/>
-
+    <title-bar title-en="Organize Sources" title-cn="阅读源管理" @on-refresh="refresh"  title-color="#e7a4c4" :show-refresh="false"/>
     <div class="search-box">
       <Input class="search" prefix="ios-search" placeholder="Source Name"/>
       <Button id="unfollow" class="btn" ref="unfollow"><Icon class="btn-icon" type="ios-trash-outline"/><span class="btn-text">UNFOLLOW</span></Button>

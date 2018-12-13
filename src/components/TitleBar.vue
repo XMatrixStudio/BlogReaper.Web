@@ -4,7 +4,7 @@
       <div class="title-top">{{titleEn}}</div>
       <div class="title" :style="{borderLeft: '6px solid ' + titleColor}">{{titleCn}}
         <div class="list-control">
-          <Icon class="btn-refresh" type="md-refresh" @click="onClickRefresh"/>
+          <Icon v-if="showRefresh" class="btn-refresh" type="md-refresh" @click="onClickRefresh"/>
           <!-- <Icon class="btn-refresh" type="ios-more"/> -->
         </div>
       </div>
@@ -61,7 +61,20 @@
 
 <script>
 export default {
-  props: ['titleCn', 'titleEn', 'titleColor'],
+  props: {
+    titleCn: {
+      required: true
+    },
+    titleEn: {
+      required: true
+    },
+    titleColor: {
+      required: true
+    },
+    showRefresh: {
+      default: true
+    }
+  },
   methods: {
     onClickRefresh () {
       this.$emit('on-refresh')
