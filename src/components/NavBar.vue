@@ -136,7 +136,7 @@ export default {
     },
 
     selectMenu (name, e) {
-      console.log(name, e)
+      // console.log(name, e)
       if (name === '-1') {
         this.menuSelect = 'home'
         return
