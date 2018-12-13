@@ -52,6 +52,12 @@ export default {
         }
       })
       console.log(result)
+      this.$store.commit('login', result.data.login)
+      if (this.$route.query.redirectUrl) {
+        this.$router.push({ name: this.$route.query.redirectUrl })
+      } else {
+        this.$router.push({ name: 'home' })
+      }
     } catch (e) {
       this.loginError(e)
     }

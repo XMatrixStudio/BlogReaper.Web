@@ -3,10 +3,12 @@
 ## Run
 
 ```bash
+$ npm --registry https://registry.npm.taobao.org install node-sass
 $ npm i
 ```
 
 PS: node-sass 可能需要淘宝源才能安装
+
 
 ### Vue ui
 

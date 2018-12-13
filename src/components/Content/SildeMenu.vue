@@ -134,15 +134,24 @@ export default {
       } else {
         this.menuItem.category[i].expand = !this.menuItem.category[i].expand
       }
+    },
+
+    updateRoute (name) {
+      if (['later', 'home'].indexOf(name) !== -1) {
+        this.activeName = name
+      }
+      if (['add', 'manger'].indexOf(name) !== -1) {
+        this.activeName = ''
+      }
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      this.updateRoute(to.name)
     }
   },
   mounted () {
-    if (['later', 'home'].indexOf(this.$route.name) !== -1) {
-      this.activeName = this.$route.name
-    }
-    if (['add', 'manger'].indexOf(this.$route.name) !== -1) {
-      this.activeName = ''
-    }
+    this.updateRoute(this.$route.name)
   }
 }
 </script>
