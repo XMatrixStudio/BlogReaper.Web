@@ -1,8 +1,39 @@
 <script>
+import gql from 'graphql-tag'
 export default {
   data () {
     return {
-      isAdd: false
+      isAdd: false,
+      newCategoryName: '',
+      visible: false
+    }
+  },
+  methods: {
+    async addCategory () {
+      try {
+        const result = await this.$apollo.mutate({
+          mutation: gql`
+            mutation ($name: String!) {
+              addCategory(name: $name) {
+                id
+              }
+            }
+          `,
+          variables: {
+            name: this.newCategoryName
+          }
+        })
+        console.log(result)
+        this.visible = false
+      } catch (error) {
+        console.log(error.message)
+        if (error.message.indexOf('repeat_name') !== -1) {
+          this.$Notice.error({
+            title: '重复的分类'
+          })
+        }
+      }
+      this.newCategoryName = ''
     }
   }
 }
@@ -10,13 +41,12 @@ export default {
 
 <template>
   <div class="follow-div">
-    <Poptip placement="bottom">
+    <Poptip placement="bottom" v-model="visible">
       <Button icon="md-add" @click="isAdd = false">关注</Button>
       <div class="title" slot="title">{{isAdd ? '新建分类': '添加到分类'}}</div>
       <div class="content" slot="content">
         <div v-if="!isAdd" class="select-item">
-          <div class="class-item">World
-          </div>
+          <div class="class-item">World</div>
           <div class="class-item">Hello
             <div class="right-btn">
               <Button class="had-add-btn" type="success" size="small">已添加</Button>
@@ -30,9 +60,9 @@ export default {
         </div>
         <div v-if="isAdd" class="add-class">
           <div>
-            <Input class="add-input" placeholder="分类名"/>
+            <Input v-model="newCategoryName" class="add-input" placeholder="分类名"/>
           </div>
-          <Button class="control-btn">
+          <Button class="control-btn" @click="addCategory">
             <Icon type="md-add"/>新建分类
           </Button>
           <Button class="control-btn" @click="isAdd = false">取消</Button>

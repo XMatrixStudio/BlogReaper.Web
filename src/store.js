@@ -11,7 +11,8 @@ export default new Vuex.Store({
       name: '',
       avatar: '',
       gender: 0
-    }
+    },
+    categories: []
   },
   mutations: {
     login (state, data) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     },
     logout (state) {
       state.isLogin = false
+    },
+    updateCategory (state, data) {
+      state.categories = data.categories
     }
   },
   actions: {}

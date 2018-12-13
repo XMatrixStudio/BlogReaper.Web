@@ -1,6 +1,7 @@
 module.exports = {
   baseUrl: '/',
   devServer: {
+    host: 'localhost',
     proxy: {
       '/api': {
         // 目标 API 地址

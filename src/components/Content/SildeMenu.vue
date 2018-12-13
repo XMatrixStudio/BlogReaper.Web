@@ -1,10 +1,15 @@
 <script>
 export default {
   name: 'sildePage',
-  props: ['menuItem'],
   data () {
     return {
-      activeName: 'home'
+      activeName: 'home',
+      menuItem: {
+        id: 0,
+        name: '全部',
+        expand: true
+      },
+      expands: [true]
     }
   },
   methods: {
@@ -28,28 +33,38 @@ export default {
     menuDown (e, num, i) {
       // console.log(e)
       e.stopPropagation()
-      // console.log(num)
       if (i === -1) {
         this.menuItem.expand = !this.menuItem.expand
       } else {
-        this.menuItem.category[i].expand = !this.menuItem.category[i].expand
+        this.$set(this.expands, i, !this.expands[i])
       }
     },
 
     updateRoute (name) {
-      if (['later', 'home'].indexOf(name) !== -1) {
-        this.activeName = name
-      }
-      if (['add', 'manger'].indexOf(name) !== -1) {
-        this.activeName = ''
-      }
-      if (name === 'feed') {
-        if (this.$route.query.category) {
-          this.activeName = 'feed-' + this.$route.query.category
-        } else {
-          this.activeName = 'feed-0'
+      this.activeName = ''
+      this.$nextTick(() => {
+        if (['later', 'home'].indexOf(name) !== -1) {
+          this.activeName = name
         }
-      }
+        if (['add', 'manger'].indexOf(name) !== -1) {
+          this.activeName = ''
+        }
+        if (name === 'feed') {
+          if (this.$route.query.category) {
+            this.activeName = 'feed-' + this.$route.query.category
+          } else {
+            this.activeName = 'feed-0'
+          }
+        }
+      })
+    },
+
+    updateExpands (categories) {
+      let newExpand = []
+      categories.forEach(() => {
+        newExpand.push(true)
+      })
+      this.expands = newExpand
     }
   },
   watch: {
@@ -57,7 +72,15 @@ export default {
       this.updateRoute(to.name)
     }
   },
-  mounted () {
+  computed: {
+    categories () {
+      let newCategories = this.$store.state.categories
+      this.updateExpands(newCategories)
+      this.updateRoute(this.$route.name)
+      return newCategories
+    }
+  },
+  async mounted () {
     this.updateRoute(this.$route.name)
   }
 }
@@ -93,31 +116,31 @@ export default {
         />
       </div>
 
-      <MenuItem class="menu-all" :name="'feed-'+menuItem.id">{{menuItem.title}}</MenuItem>
-      <div v-for="(item, index) in menuItem.category" :key="item.id">
+      <MenuItem class="menu-all" :name="'feed-'+menuItem.id">{{menuItem.name}}</MenuItem>
+      <div v-for="(item, index) in categories" :key="item.id">
         <MenuItem class="menu-sub" :name="'feed-' + item.id">
           <Icon
             class="menu-down"
-            v-show="item.expand"
+            v-show="expands[index]"
             @click="menuDown($event, item.id, index)"
             type="md-arrow-dropdown"
           />
           <Icon
             class="menu-down"
-            v-show="!item.expand"
+            v-show="!expands[index]"
             @click="menuDown($event, item.id, index)"
             type="md-arrow-dropright"
           />
-          {{item.title}}
+          {{item.name}}
         </MenuItem>
         <transition name="fade">
-          <div v-show="item.expand">
+          <div v-show="expands[index]">
             <MenuItem
-              v-for="subItem in item.subItem"
-              :key="subItem.id"
-              :name="'feed-'+subItem.id"
+              v-for="feed in item.feeds"
+              :key="feed.id"
+              :name="'feed-'+feed.id"
               class="menu-sub-sub"
-            >{{subItem.title}}</MenuItem>
+            >{{feed.title}}</MenuItem>
           </div>
         </transition>
       </div>

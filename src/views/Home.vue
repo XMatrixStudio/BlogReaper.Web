@@ -2,7 +2,7 @@
   <div class="home-page">
     <Layout>
       <Sider class="sider" hide-trigger>
-        <silde-menu :menu-item="menuItem"/>
+        <silde-menu/>
       </Sider>
       <div class="content">
         <router-view/>
@@ -32,6 +32,7 @@
 </style>
 
 <script>
+import gql from 'graphql-tag'
 import SildeMenu from '../components/Content/SildeMenu'
 export default {
   components: {
@@ -39,26 +40,26 @@ export default {
   },
   data () {
     return {
-      split: 0.2,
-      menuItem: {
-        id: 0,
-        title: '全部',
-        expand: true,
-        category: [
-          {
-            id: 1,
-            title: '博客',
-            expand: true,
-            subItem: [{ id: 2, title: 'Icytowm' }, { id: 8, title: 'Icytowm' }, { id: 9, title: 'Icytowm' }, { id: 3, title: 'Zhenly' }]
-          },
-          {
-            id: 4,
-            title: '新闻',
-            expand: false,
-            subItem: [{ id: 5, title: 'IT Home' }, { id: 6, title: 'Github' }]
+    }
+  },
+
+  async mounted () {
+    try {
+      const result = await this.$apollo.query({
+        query: gql`query {
+          categories {
+            id
+            name
+            feeds {
+              id
+              title
+            }
           }
-        ]
-      }
+        }`
+      })
+      this.$store.commit('updateCategory', result.data)
+    } catch (e) {
+      console.log(e)
     }
   }
 }

@@ -56,6 +56,7 @@ export default {
             </ul>
           </div>
         </Card>
+        <Page :total="searchResult.length"/>
       </div>
     </div>
     <Drawer title="阅读源" width="550" :closable="true" v-model="showDetail">
@@ -71,7 +72,8 @@ export default {
   margin: 20px auto;
   display: inline-block;
   .search-div {
-    margin: 20px 40px 20px 40px;
+    max-width: 600px;
+    margin: 20px auto;
     .result-card {
       margin-top: 40px;
       .result-card-box {
