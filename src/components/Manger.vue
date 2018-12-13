@@ -9,7 +9,15 @@
         </div>
       </div>
     </div>
-    <Table size="large" class="source-table" :columns="columns" :data="data1"></Table>
+    <div class="search-box">
+      <Input class="search" prefix="ios-search" placeholder="Source Name"/>
+      <Button id="unfollow" class="btn" ref="unfollow"><Icon class="btn-icon" type="ios-trash-outline"/><span class="btn-text">UNFOLLOW</span></Button>
+      <strong id="selected-text" ref="selectedText">{{selected_num}}</strong>
+    </div>
+    <Table ref="selection" size="large" class="source-table" :columns="columns" :data="data1"
+            @on-selection-change="changeChose"
+            @on-select="getTableChosedValue"
+            @on-select-all="selectAll"></Table>
   </div>
 </template>
 
@@ -59,9 +67,20 @@
   }
   .source-table {
     max-width: 600px;
-    margin: 30px auto 10px auto;
+    margin: 15px auto 10px auto;
+  }
+  .search-box {
+    position: relative;
+    max-width: 600px;
+    margin: 20px auto 0px auto;
+    text-align: left;
+    .search {
+      display: block;
+      width: 200px;
+    }
   }
 }
+
 .source-box {
   margin-bottom: 10px;
   position: relative;
@@ -69,7 +88,7 @@
 .head-image {
   width: 50px;
   height: 50px;
-  margin-top: 10px;
+  margin-top: 15px;
   margin-bottom: 10px;
   margin-right: 20px;
 }
@@ -77,6 +96,29 @@
   display: inline-block;
   position: relative;
   bottom: 30px;
+}
+.trash-icon {
+  font-size: 20px;
+}
+.btn-icon {
+  font-size: 15px;
+  margin-right: 10px;
+}
+.btn-text {
+  margin-top: 5px;
+}
+#selected-text {
+  position: relative;
+  top: 8px;
+  font-size: 15px;
+  display: inline-block;
+  margin-left: 20px;
+  opacity: 0;
+}
+#unfollow {
+  display: inline-block;
+  margin-top: 15px;
+  opacity: 0;
 }
 </style>
 
@@ -86,9 +128,15 @@ export default {
     return {
       columns: [
         {
+          type: 'selection',
+          width: 50,
+          align: 'center'
+        },
+        {
           title: 'Source Name',
           key: 'name',
-          width: 300,
+          width: 280,
+          sortable: true,
           render: (h, params) => {
             return h('div', [
               h('img', {
@@ -96,7 +144,7 @@ export default {
                   'head-image': true
                 },
                 attrs: {
-                  src: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E'
+                  src: params.row.img
                 }
               }),
               h('strong', {
@@ -113,21 +161,27 @@ export default {
         },
         {
           title: 'Stories',
-          key: 'stories'
+          key: 'stories',
+          sortable: true
         },
         {
           title: 'Reads',
-          key: 'reads'
+          key: 'reads',
+          sortable: true
         },
         {
-          title: 'Action',
+          title: ' ',
           key: 'action',
           align: 'center',
+          width: 60,
           render: (h, params) => {
             return h('div', [
-              h('Button', {
+              h('Icon', {
+                class: {
+                  'trash-icon': true
+                },
                 props: {
-                  size: 'small'
+                  type: 'ios-trash-outline'
                 },
                 on: {
                   click: () => {
@@ -143,24 +197,29 @@ export default {
         {
           name: 'Zhenly',
           stories: 1,
-          reads: 2
+          reads: 2,
+          img: 'http://img.hb.aicdn.com/007c910095e3cdc0293cebc1d84b08dbac01cb24159ce-JYDpS7_fw658'
         },
         {
           name: 'Haaa',
           stories: 2,
-          reads: 0
+          reads: 0,
+          img: 'http://img.hb.aicdn.com/aa38a6ac44345f733067c999a74be222fb4d979467660-jOoJUl_fw658'
         },
         {
           name: 'CTP',
           stories: 30,
-          reads: 1
+          reads: 1,
+          img: 'http://img.hb.aicdn.com/39460095a1be72702a8e104443fef79514fa7e1e4f3c-I19CMi_fw658'
         },
         {
           name: '天王盖地虎',
           stories: 6,
-          reads: 999
+          reads: 999,
+          img: 'http://img.hb.aicdn.com/c2e0966db1e7971f235019db59a279add0fef99a136e2-Sdjq1A_fw658'
         }
-      ]
+      ],
+      selected_num: 'Select 0 of'
     }
   },
   methods: {
@@ -172,6 +231,23 @@ export default {
     },
     remove (index) {
       this.data1.splice(index, 1)
+    },
+    changeChose (selection) {
+      console.log(selection)
+      this.selected_num = 'Select ' + selection.length + ' of ' + this.data1.length
+      if (selection.length === 0) {
+        this.$refs.unfollow.$el.style.opacity = 0
+        this.$refs.selectedText.style.opacity = 0
+      } else {
+        this.$refs.unfollow.$el.style.opacity = 1
+        this.$refs.selectedText.style.opacity = 1
+      }
+    },
+    getTableChosedValue (selection, row) {
+
+    },
+    selectAll (selection) {
+
     }
   }
 }
