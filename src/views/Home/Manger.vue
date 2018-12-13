@@ -1,14 +1,7 @@
 <template>
   <div class="manger-comp">
-    <div class="title-box">
-      <div class="title-top">Organize Sources</div>
-      <div class="title">阅读源管理
-        <div class="list-control">
-          <Icon class="btn-refresh" type="md-refresh"/>
-          <Icon class="btn-refresh" type="ios-more"/>
-        </div>
-      </div>
-    </div>
+    <title-bar title-en="Organize Sources" title-cn="阅读源管理" @on-refresh="refresh"  title-color="#e7a4c4"/>
+
     <div class="search-box">
       <Input class="search" prefix="ios-search" placeholder="Source Name"/>
       <Button id="unfollow" class="btn" ref="unfollow"><Icon class="btn-icon" type="ios-trash-outline"/><span class="btn-text">UNFOLLOW</span></Button>
@@ -27,44 +20,6 @@
   width: 100%;
   margin: 20px auto;
   display: inline-block;
-  .title-box {
-    .title-top {
-      user-select: none;
-      text-align: left;
-      max-width: 600px;
-      margin: 0 auto 10px auto;
-      font-size: 16px;
-      color: rgb(185, 184, 184);
-    }
-    .title {
-      user-select: none;
-      margin: 0 auto 35px auto;
-      max-width: 600px;
-      text-align: left;
-      font-size: 28px;
-      padding-left: 10px;
-      font-weight: bold;
-      border-left: 6px solid #34a1a5;
-      i {
-        vertical-align: middle;
-        margin-right: 10px;
-      }
-      .list-control {
-        float: right;
-        .btn-refresh {
-          cursor: pointer;
-          color: #757575;
-          border-radius: 6px;
-          font-size: 24px;
-          padding: 8px;
-          transition: all 0.4s;
-          &:hover {
-            background: #f1f1f1;
-          }
-        }
-      }
-    }
-  }
   .source-table {
     max-width: 600px;
     margin: 15px auto 10px auto;
@@ -123,7 +78,9 @@
 </style>
 
 <script>
+import TitleBar from '../../components/TitleBar'
 export default {
+  components: { TitleBar },
   data () {
     return {
       columns: [
@@ -223,6 +180,9 @@ export default {
     }
   },
   methods: {
+    refresh () {
+
+    },
     show (index) {
       this.$Modal.info({
         title: 'User Info',
