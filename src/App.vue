@@ -28,5 +28,9 @@ export default {
 }
 .router {
   margin-top: 60px;
+  min-height: calc(100vh - 60px);
+}
+.ivu-layout {
+  background: #fefefe!important;
 }
 </style>

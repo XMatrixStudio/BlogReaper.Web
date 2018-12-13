@@ -15,8 +15,17 @@
       </MenuItem>
 
       <div class="menu-title">Reaper
-        <Icon ref="" @click="gotoManger" :class="[{'select-icon' : $route.name === 'manger'},'right-icon']" type="md-settings"/>
-        <Icon @click="gotoAdd" :class="[{'select-icon' : $route.name === 'add'},'right-icon']" type="md-add"/>
+        <Icon
+          ref
+          @click="gotoManger"
+          :class="[{'select-icon' : $route.name === 'manger'},'right-icon']"
+          type="md-settings"
+        />
+        <Icon
+          @click="gotoAdd"
+          :class="[{'select-icon' : $route.name === 'add'},'right-icon']"
+          type="md-add"
+        />
       </div>
 
       <MenuItem class="menu-all" :name="menuItem.id">{{menuItem.title}}</MenuItem>
@@ -55,9 +64,11 @@
 .home-sider {
   background: #fff !important;
   height: 100%;
+  // border-right: 1px solid #dbdde1;
   .menu-this {
     min-height: calc(100vh - 62px);
     padding-top: 16px;
+    height: 100%;
   }
   .menu-title {
     padding: 20px 0 20px 16px;

@@ -145,9 +145,14 @@ export default {
     }
   },
   mounted () {
-    if (['home', 'index'].indexOf(this.$route.name) !== -1) {
-      this.menuSelect = this.$route.name
+    if (this.$route.name === 'index') {
+      this.menuSelect = 'index'
+    } else {
+      this.menuSelect = 'home'
     }
+    // if (['home', 'index'].indexOf(this.$route.name) !== -1) {
+    //   this.menuSelect = this.$route.name
+    // }
   }
 }
 </script>
