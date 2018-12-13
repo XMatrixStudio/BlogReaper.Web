@@ -15,8 +15,8 @@
 </style>
 
 <script>
-import ContentList from './ContentList'
-import TitleBar from './TitleBar'
+import TitleBar from '../../components/TitleBar'
+import ContentList from '../../components/Content/ContentList'
 export default {
   components: { ContentList, TitleBar },
   methods: {

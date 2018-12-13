@@ -1,37 +1,29 @@
 <template>
-  <div class="source-draw">
-    <div class="drawer-control">
-      <span class="drawer-title">{{sourceData.name}}</span>
-      <Button class="drawer-btn" icon="md-add">关注</Button>
-    </div>
+  <div class="read-later">
+    <title-bar  title-en="Read later" title-cn="稍后阅读" @on-refresh="refresh"  title-color="#c75454"/>
     <content-list :contents="contents"/>
   </div>
 </template>
 
 <style lang="scss">
-.source-draw {
-  .drawer-control {
-    border-left: 4px solid rgb(206, 66, 66);
-    padding-left: 10px;
-    .drawer-title {
-      user-select: none;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .drawer-btn {
-      float: right;
-    }
-  }
+.read-later {
+  text-align: center;
+  width: 100%;
+  margin: 20px auto;
+  display: inline-block;
 }
 </style>
 
 <script>
-import ContentList from './ContentList'
+import TitleBar from '../../components/TitleBar'
+import ContentList from '../../components/Content/ContentList'
 export default {
-  components: {
-    ContentList
+  components: { TitleBar, ContentList },
+  methods: {
+    refresh () {
+      console.log('r')
+    }
   },
-  props: ['sourceData'],
   data () {
     return {
       contents: [{

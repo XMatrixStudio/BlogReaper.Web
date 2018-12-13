@@ -47,8 +47,8 @@
 </style>
 
 <script>
-import ContentList from '../components/ContentList'
-import SourceCard from '../components/SourceCard'
+import ContentList from '../components/Content/ContentList'
+import SourceCard from '../components/FeedSource/SourceCard'
 import TitleBar from '../components/TitleBar'
 export default {
   components: {

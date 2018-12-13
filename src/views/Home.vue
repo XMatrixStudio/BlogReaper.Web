@@ -32,7 +32,7 @@
 </style>
 
 <script>
-import SildeMenu from '../components/SildeMenu'
+import SildeMenu from '../components/Content/SildeMenu'
 export default {
   components: {
     SildeMenu

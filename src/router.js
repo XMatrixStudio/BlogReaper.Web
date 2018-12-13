@@ -3,10 +3,10 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Index from './views/Index.vue'
 import Login from './views/Login.vue'
-import ReadLater from './components/ReadLater.vue'
-import Today from './components/Today.vue'
-import Add from './components/Add.vue'
-import Manger from './components/Manger.vue'
+import ReadLater from './views/Home/ReadLater.vue'
+import Today from './views/Home/Today.vue'
+import Add from './views/Home/Add.vue'
+import Manger from './views/Home/Manger.vue'
 
 Vue.use(Router)
 
