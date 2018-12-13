@@ -2,7 +2,7 @@
   <div class="source-draw">
     <div class="drawer-control">
       <span class="drawer-title">{{sourceData.name}}</span>
-      <Button class="drawer-btn" icon="md-add">关注</Button>
+      <source-follow class="drawer-btn" />
     </div>
     <content-list :contents="contents"/>
   </div>
@@ -26,10 +26,11 @@
 </style>
 
 <script>
+import SourceFollow from '../FeedSource/SourceFollow'
 import ContentList from '../Content/ContentList'
 export default {
   components: {
-    ContentList
+    ContentList, SourceFollow
   },
   props: ['sourceData'],
   data () {

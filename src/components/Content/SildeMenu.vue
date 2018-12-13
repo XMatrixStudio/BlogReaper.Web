@@ -1,3 +1,68 @@
+<script>
+export default {
+  name: 'sildePage',
+  props: ['menuItem'],
+  data () {
+    return {
+      activeName: 'home'
+    }
+  },
+  methods: {
+    gotoAdd () {
+      this.$router.push({ name: 'add' })
+      this.activeName = ''
+    },
+
+    gotoManger () {
+      this.$router.push({ name: 'manger' })
+      this.activeName = ''
+    },
+
+    selectMenu (name) {
+      if (name === 'later' || name === 'home') {
+        this.$router.push({ name: name })
+      } else if (name.indexOf('-') !== -1) {
+        this.$router.push({ name: 'feed', query: { category: name.split('-')[1] } })
+      }
+    },
+    menuDown (e, num, i) {
+      // console.log(e)
+      e.stopPropagation()
+      // console.log(num)
+      if (i === -1) {
+        this.menuItem.expand = !this.menuItem.expand
+      } else {
+        this.menuItem.category[i].expand = !this.menuItem.category[i].expand
+      }
+    },
+
+    updateRoute (name) {
+      if (['later', 'home'].indexOf(name) !== -1) {
+        this.activeName = name
+      }
+      if (['add', 'manger'].indexOf(name) !== -1) {
+        this.activeName = ''
+      }
+      if (name === 'feed') {
+        if (this.$route.query.category) {
+          this.activeName = 'feed-' + this.$route.query.category
+        } else {
+          this.activeName = 'feed-0'
+        }
+      }
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      this.updateRoute(to.name)
+    }
+  },
+  mounted () {
+    this.updateRoute(this.$route.name)
+  }
+}
+</script>
+
 <template>
   <div class="home-sider">
     <Menu
@@ -28,9 +93,9 @@
         />
       </div>
 
-      <MenuItem class="menu-all" :name="menuItem.id">{{menuItem.title}}</MenuItem>
+      <MenuItem class="menu-all" :name="'feed-'+menuItem.id">{{menuItem.title}}</MenuItem>
       <div v-for="(item, index) in menuItem.category" :key="item.id">
-        <MenuItem class="menu-sub" :name="item.id">
+        <MenuItem class="menu-sub" :name="'feed-' + item.id">
           <Icon
             class="menu-down"
             v-show="item.expand"
@@ -50,7 +115,7 @@
             <MenuItem
               v-for="subItem in item.subItem"
               :key="subItem.id"
-              :name="subItem.id"
+              :name="'feed-'+subItem.id"
               class="menu-sub-sub"
             >{{subItem.title}}</MenuItem>
           </div>
@@ -98,60 +163,3 @@
   }
 }
 </style>
-
-<script>
-
-export default {
-  name: 'sildePage',
-  props: ['menuItem'],
-  data () {
-    return {
-      activeName: 'home'
-    }
-  },
-  methods: {
-    gotoAdd () {
-      this.$router.push({ name: 'add' })
-      this.activeName = ''
-    },
-
-    gotoManger () {
-      this.$router.push({ name: 'manger' })
-      this.activeName = ''
-    },
-
-    selectMenu (name) {
-      if (name === 'later' || name === 'home') {
-        this.$router.push({ name: name })
-      }
-    },
-    menuDown (e, num, i) {
-      // console.log(e)
-      e.stopPropagation()
-      // console.log(num)
-      if (i === -1) {
-        this.menuItem.expand = !this.menuItem.expand
-      } else {
-        this.menuItem.category[i].expand = !this.menuItem.category[i].expand
-      }
-    },
-
-    updateRoute (name) {
-      if (['later', 'home'].indexOf(name) !== -1) {
-        this.activeName = name
-      }
-      if (['add', 'manger'].indexOf(name) !== -1) {
-        this.activeName = ''
-      }
-    }
-  },
-  watch: {
-    '$route' (to, from) {
-      this.updateRoute(to.name)
-    }
-  },
-  mounted () {
-    this.updateRoute(this.$route.name)
-  }
-}
-</script>
