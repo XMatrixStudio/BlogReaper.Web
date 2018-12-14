@@ -43,11 +43,15 @@ export default {
   },
 
   async mounted () {
+    // if (!this.$store.state.isLogin) {
+    //   this.$router.push({ name: 'index' })
+    // } else {
     try {
       this.$service.category.update.call(this)
     } catch (e) {
       console.log(e)
     }
+    // }
   }
 }
 </script>

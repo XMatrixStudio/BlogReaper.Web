@@ -5,19 +5,17 @@ async function update () {
   const result = await this.$apollo.query({
     query: gql`
       query {
-        categories {
-          id
-          name
-          feeds {
+        user {
+          categories {
             id
-            title
+            name
           }
         }
       }
     `,
     fetchPolicy: 'network-only'
   })
-  this.$store.commit('updateCategory', result.data)
+  this.$store.commit('updateCategory', result.data.user)
 }
 
 async function add (name) {

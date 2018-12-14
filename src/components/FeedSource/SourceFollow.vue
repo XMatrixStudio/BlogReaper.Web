@@ -57,7 +57,7 @@ export default {
               :key="category.id"
             >{{category.name}}</div>
           </div>
-          <div class="class-item">Hello
+          <div v-if="false" class="class-item">Hello
             <div class="right-btn">
               <Button class="had-add-btn" type="success" size="small">已添加</Button>
               <Button class="remove-btn" type="warning" size="small">移除</Button>
@@ -100,12 +100,12 @@ export default {
     min-width: 160px;
     .select-item {
       .list-item {
-        max-height: 200px;
+        max-height: 140px;
         overflow-y: auto;
       }
       .class-item {
         cursor: pointer;
-        padding: 10px;
+        padding: 8px;
         border-radius: 6px;
         user-select: none;
         font-size: 14px;
