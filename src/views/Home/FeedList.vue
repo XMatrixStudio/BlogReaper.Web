@@ -54,7 +54,8 @@ export default {
         image: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E',
         text: '【摘要】在前面，我用了3篇文章解释python的面向对象： 1. "面向对象：从代码复用开始" 2. "面向对象：设置对象属性" 3. "类和对象的名称空间" 本篇是第4篇，用一个完整的示例来解释面向对象的一些细节。 例子的模型是父类Employe和子类Manager，从类的定义开始，一步步完善直到类变得完',
         url: 'http://www.cnblogs.com/f-ck-need-u/p/10099735.html'
-      }]
+      }],
+      isFeed: false
     }
   },
   methods: {
@@ -65,7 +66,15 @@ export default {
         for (let i in this.categories) {
           if (this.categories[i].id === this.$route.query.category) {
             this.name = this.categories[i].name
+            this.isFeed = false
             break
+          }
+          for (let feed of this.categories[i].feeds) {
+            if (feed.id === this.$route.query.category) {
+              this.name = feed.title
+              this.isFeed = true
+              break
+            }
           }
         }
       }
@@ -98,6 +107,7 @@ export default {
       @on-refresh="refresh"
       @on-remove="remove"
       @on-rename="rename"
+      :is-feed="isFeed"
       title-color="#50bf72"
       :show-menu="true"
     />

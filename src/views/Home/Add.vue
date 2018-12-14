@@ -4,6 +4,11 @@ import SourceDraw from '../../components/FeedSource/SourceDraw'
 import SourceFollow from '../../components/FeedSource/SourceFollow'
 export default {
   components: { TitleBar, SourceDraw, SourceFollow },
+  computed: {
+    categories () {
+      return this.$store.state.categories
+    }
+  },
   data () {
     return {
       showDetail: false,
@@ -11,38 +16,26 @@ export default {
       sourceData: {
         name: 'Zhenly'
       },
-      searchResult: [{
-        'id': '',
-        'publicId': '5c13a9cc94fa356eec73cd52',
-        'url': 'https://icytown.com/atom.xml',
-        'title': '冰镇',
-        'subtitle': '千万世界的一个小小埃希镇',
-        'follow': 0,
-        'articles': [
-          {
-            'title': 'LeetCode | 135 Candy',
-            'url': 'https://icytown.com/leetcode/135-candy/'
-          },
-          {
-            'title': 'LeetCode | 97 Interleaving String',
-            'url': 'https://icytown.com/leetcode/97-interleaving-string/'
-          },
-          {
-            'title': 'LeetCode | 87 Scramble String',
-            'url': 'https://icytown.com/leetcode/87-scramble-string/'
-          },
-          {
-            'title': 'Go | Muxie，一个路由框架的源码分析',
-            'url': 'https://icytown.com/go/muxie-analysis/'
-          },
-          {
-            'title': 'LeetCode | 72 Edit Distance',
-            'url': 'https://icytown.com/leetcode/72-edit-distance/'
-          }]
-      }]
+      searchResult: [],
+      helpText: '快去搜索点东西吧'
     }
   },
   methods: {
+    isFollow (id) {
+      let followed = []
+      for (let i in this.categories) {
+        for (let feed of this.categories[i].feeds) {
+          if (feed.publicId === id) {
+            followed.push({
+              categoryId: this.categories[i].id,
+              feedId: feed.id
+            })
+          }
+        }
+      }
+      return followed
+    },
+
     showDrawer (i) {
       this.showDetail = true
       this.sourceData.name = this.searchResult[i].name
@@ -52,12 +45,24 @@ export default {
       if (this.searchText.indexOf('http') !== -1) {
         await this.$service.feed.addPublicFeedOrNot.call(this, {
           url: this.searchText
-        },
-        (result) => {
-          console.log(result.data.addPublicFeedOrNot)
+        }, (result) => {
+          this.searchResult = []
+          this.searchResult.push(result.data.addPublicFeedOrNot)
+        }, () => {
+          this.helpText = '无法解析这个东西'
         })
       } else {
-        // 搜索关键字
+        // 搜索关键字h
+        await this.$service.feed.search.call(this, {
+          keyword: this.searchText
+        }, (result) => {
+          this.searchResult = []
+          this.searchResult = result.data.feeds
+          if (this.searchResult.length === 0) this.helpText = '找不到东西'
+        }, () => {
+          this.searchResult = []
+          this.helpText = '快去搜点东西吧'
+        })
       }
     },
 
@@ -82,6 +87,10 @@ export default {
         :autofocus="true"
         @on-search="onSearch"
       />
+      <div v-if="searchResult.length === 0" class="nothing-box">
+        <img src="../../assets/nothing.svg">
+        <p>{{helpText}}🐷</p>
+      </div>
       <div v-if="searchResult.length != 0" class="result-card">
         <p class="result-title">搜索结果：</p>
         <Card class="result-card-box" v-for="(item, index) in searchResult" :key="item.publicId">
@@ -98,7 +107,11 @@ export default {
                 >{{parseUrl(item.url)}}</a>
                 <div v-if="item.subtitle !== undefined" class="sub-title">{{item.subtitle}}</div>
               </div>
-              <source-follow class="follow-btn"/>
+              <source-follow
+                :current-data="isFollow(item.publicId)"
+                :public-id="item.publicId"
+                class="follow-btn"
+              />
               <Button class="follow-btn" icon="md-eye" @click="showDrawer(index)">查看</Button>
             </div>
             <div class="recent">
@@ -130,6 +143,14 @@ export default {
   width: 100%;
   margin: 20px auto;
   display: inline-block;
+
+  .nothing-box {
+    font-size: 18px;
+    p {
+      user-select: none;
+      margin: 20px;
+    }
+  }
   .search-div {
     max-width: 600px;
     margin: 20px auto;

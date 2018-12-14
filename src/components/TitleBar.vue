@@ -15,6 +15,9 @@ export default {
     },
     showMenu: {
       default: false
+    },
+    isFeed: {
+      default: false
     }
   },
   methods: {
@@ -32,14 +35,25 @@ export default {
           this.$refs.editNameInput.focus()
         })
       } else if (this.newName !== this.titleCn) {
-        await this.$service.category.rename.call(this, {
-          id: this.$route.query.category,
-          name: this.newName
-        }, async (result) => {
-          this.$emit('on-rename', this.newName)
-          this.isEdit = false
-          await this.$service.category.update.call(this)
-        })
+        if (this.isFeed) {
+          await this.$service.feed.rename.call(this, {
+            id: this.$route.query.category,
+            title: this.newName
+          }, async (result) => {
+            this.$emit('on-rename', this.newName)
+            this.isEdit = false
+            await this.$service.category.update.call(this)
+          })
+        } else {
+          await this.$service.category.rename.call(this, {
+            id: this.$route.query.category,
+            name: this.newName
+          }, async (result) => {
+            this.$emit('on-rename', this.newName)
+            this.isEdit = false
+            await this.$service.category.update.call(this)
+          })
+        }
       } else {
         this.isEdit = false
       }

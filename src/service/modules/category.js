@@ -9,6 +9,11 @@ async function update () {
           categories {
             id
             name
+            feeds {
+              id
+              publicId
+              title
+            }
           }
         }
       }

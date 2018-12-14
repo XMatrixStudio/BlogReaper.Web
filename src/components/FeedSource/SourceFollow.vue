@@ -1,5 +1,14 @@
 <script>
 export default {
+  props: {
+    currentData: {
+      type: Array,
+      default: function () { return [] }
+    },
+    publicId: {
+      require: true
+    }
+  },
   data () {
     return {
       isAdd: false,
@@ -16,6 +25,46 @@ export default {
 
   },
   methods: {
+    async addToCategory (categoryId) {
+      if (this.currentData.length === 0) {
+        await this.$service.feed.add.call(this, {
+          id: this.publicId,
+          categoryId: categoryId
+        }, async (result) => {
+          console.log(result)
+          await this.$service.category.update.call(this)
+        })
+        this.visible = false
+      } else if (this.containFeed(categoryId)) { // 移除
+        if (this.currentData.length === 1) { // 移除Feed
+          await this.$service.feed.remove.call(this, {
+            id: this.currentData[0].feedId
+          }, async () => { await this.$service.category.update.call(this) })
+        } else { // 移除 Category
+          let newId = []
+          for (let item of this.currentData) {
+            if (item.categoryId !== categoryId) {
+              newId.push(item.categoryId)
+            }
+          }
+          await this.$service.feed.edit.call(this, {
+            id: this.currentData[0].feedId,
+            categoryIds: newId
+          }, async () => { await this.$service.category.update.call(this) })
+        }
+      } else { // 添加
+        let newId = []
+        for (let item of this.currentData) {
+          newId.push(item.categoryId)
+        }
+        newId.push(categoryId)
+        await this.$service.feed.edit.call(this, {
+          id: this.currentData[0].feedId,
+          categoryIds: newId
+        }, async () => { await this.$service.category.update.call(this) })
+      }
+    },
+
     async addCategory () {
       await this.$service.category.add.call(this, this.newCategoryName,
         (result) => {
@@ -38,6 +87,14 @@ export default {
       this.$nextTick(() => {
         this.$refs.newNameInput.focus()
       })
+    },
+    containFeed (categorrId) {
+      for (let i in this.currentData) {
+        if (this.currentData[i].categoryId === categorrId) {
+          return true
+        }
+      }
+      return false
     }
   }
 }
@@ -46,7 +103,8 @@ export default {
 <template>
   <div class="follow-div">
     <Poptip placement="bottom" v-model="visible">
-      <Button icon="md-add" @click="isAdd = false">关注</Button>
+      <Button icon="md-add" v-if="currentData.length === 0" @click="isAdd = false">关注</Button>
+      <Button type="success" v-if="currentData.length !== 0" @click="isAdd = false">已关注</Button>
       <div class="title" slot="title">{{isAdd ? '新建分类': '添加到分类'}}</div>
       <div class="content" slot="content">
         <div v-if="!isAdd" class="select-item">
@@ -55,12 +113,13 @@ export default {
               class="class-item"
               v-for="category in categories"
               :key="category.id"
-            >{{category.name}}</div>
-          </div>
-          <div v-if="false" class="class-item">Hello
-            <div class="right-btn">
-              <Button class="had-add-btn" type="success" size="small">已添加</Button>
-              <Button class="remove-btn" type="warning" size="small">移除</Button>
+              @click="addToCategory(category.id)"
+            >
+              {{category.name}}
+              <div v-if="containFeed(category.id)" class="right-btn">
+                <Button class="had-add-btn" type="success" size="small">已添加</Button>
+                <Button class="remove-btn" type="warning" size="small">移除</Button>
+              </div>
             </div>
           </div>
           <Divider/>
