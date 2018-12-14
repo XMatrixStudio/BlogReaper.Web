@@ -148,12 +148,21 @@ export default {
       })
     },
 
-    selectMenu (name, e) {
-      if (name === '-1') {
+    selectMenu (name) {
+      if (name === 'home') {
+        if (this.$store.state.isLogin) {
+          this.$router.push({ name: name })
+        } else {
+          this.$Notice.warning({
+            title: '请先登陆'
+          })
+          this.$nextTick(() => {
+            this.$refs.menuBar.currentActiveName = 'index'
+          })
+        }
+      } else if (name === '-1') {
         this.menuSelect = 'home'
-        return
       }
-      this.$router.push({ name: name })
     }
   },
   watch: {

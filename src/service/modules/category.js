@@ -39,6 +39,20 @@ async function add (name) {
   return result
 }
 
+async function remove (data) {
+  const result = await this.$apollo.mutate({
+    mutation: gql`
+      mutation($id: String!) {
+        removeCategory(id: $id)
+      }
+    `,
+    variables: {
+      id: data.id
+    }
+  })
+  return result
+}
+
 async function rename (data) {
   const result = await this.$apollo.mutate({
     mutation: gql`
@@ -57,5 +71,6 @@ async function rename (data) {
 export default {
   update: util.default.wrapper(update),
   add: util.default.wrapper(add),
-  rename: util.default.wrapper(rename)
+  rename: util.default.wrapper(rename),
+  remove: util.default.wrapper(remove)
 }

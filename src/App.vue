@@ -22,6 +22,7 @@ export default {
           this.$store.commit('login', result.data.user)
         }, () => {
           this.$store.commit('logout')
+          this.$router.push({ name: 'index' })
         })
     }
   }
