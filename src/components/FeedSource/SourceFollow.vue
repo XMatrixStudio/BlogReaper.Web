@@ -1,5 +1,4 @@
 <script>
-import gql from 'graphql-tag'
 export default {
   data () {
     return {
@@ -8,32 +7,37 @@ export default {
       visible: false
     }
   },
+  computed: {
+    categories () {
+      return this.$store.state.categories
+    }
+  },
+  mounted () {
+
+  },
   methods: {
     async addCategory () {
-      try {
-        const result = await this.$apollo.mutate({
-          mutation: gql`
-            mutation ($name: String!) {
-              addCategory(name: $name) {
-                id
-              }
-            }
-          `,
-          variables: {
-            name: this.newCategoryName
+      await this.$service.category.add.call(this, this.newCategoryName,
+        (result) => {
+          console.log(result)
+          this.isAdd = false
+        },
+        (error) => {
+          console.log(error.message)
+          if (error.message.indexOf('repeat_name') !== -1) {
+            this.$Notice.error({
+              title: '重复的分类'
+            })
           }
         })
-        console.log(result)
-        this.visible = false
-      } catch (error) {
-        console.log(error.message)
-        if (error.message.indexOf('repeat_name') !== -1) {
-          this.$Notice.error({
-            title: '重复的分类'
-          })
-        }
-      }
+      await this.$service.category.update.call(this)
       this.newCategoryName = ''
+    },
+    switchAdd () {
+      this.isAdd = true
+      this.$nextTick(() => {
+        this.$refs.newNameInput.focus()
+      })
     }
   }
 }
@@ -46,7 +50,13 @@ export default {
       <div class="title" slot="title">{{isAdd ? '新建分类': '添加到分类'}}</div>
       <div class="content" slot="content">
         <div v-if="!isAdd" class="select-item">
-          <div class="class-item">World</div>
+          <div class="list-item">
+            <div
+              class="class-item"
+              v-for="category in categories"
+              :key="category.id"
+            >{{category.name}}</div>
+          </div>
           <div class="class-item">Hello
             <div class="right-btn">
               <Button class="had-add-btn" type="success" size="small">已添加</Button>
@@ -54,13 +64,19 @@ export default {
             </div>
           </div>
           <Divider/>
-          <div @click="isAdd = true" class="class-item new-class">
+          <div @click="switchAdd" class="class-item new-class">
             <Icon type="md-add"/>新建分类
           </div>
         </div>
         <div v-if="isAdd" class="add-class">
           <div>
-            <Input v-model="newCategoryName" class="add-input" placeholder="分类名"/>
+            <Input
+              ref="newNameInput"
+              v-model="newCategoryName"
+              class="add-input"
+              placeholder="分类名"
+              :autofocus="true"
+            />
           </div>
           <Button class="control-btn" @click="addCategory">
             <Icon type="md-add"/>新建分类
@@ -82,6 +98,10 @@ export default {
   .content {
     min-width: 160px;
     .select-item {
+      .list-item {
+        max-height: 200px;
+        overflow-y: scroll;
+      }
       .class-item {
         cursor: pointer;
         padding: 10px;

@@ -32,7 +32,6 @@
 </style>
 
 <script>
-import gql from 'graphql-tag'
 import SildeMenu from '../components/Content/SildeMenu'
 export default {
   components: {
@@ -45,19 +44,7 @@ export default {
 
   async mounted () {
     try {
-      const result = await this.$apollo.query({
-        query: gql`query {
-          categories {
-            id
-            name
-            feeds {
-              id
-              title
-            }
-          }
-        }`
-      })
-      this.$store.commit('updateCategory', result.data)
+      this.$service.category.update.call(this)
     } catch (e) {
       console.log(e)
     }

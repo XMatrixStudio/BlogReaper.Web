@@ -36,13 +36,13 @@ export default {
   <div class="add-comp">
     <title-bar title-en="Add Sources" title-cn="添加阅读源" title-color="#7f27e4" :show-refresh="false"/>
     <div class="search-div">
-      <Input size="large" class="search-input" search placeholder="主题，网站或者RSS链接"/>
+      <Input size="large" class="search-input" search placeholder="主题，网站或者RSS链接" :autofocus="true"/>
       <div v-if="searchResult.length != 0" class="result-card">
         <p class="result-title">搜索结果：</p>
         <Card class="result-card-box" v-for="(item, index) in searchResult" :key="item.id">
           <div class="result">
             <div class="base-info">
-              <Avatar shape="square" size="large">{{item.name[0]}}</Avatar>
+              <Avatar>{{item.name[0]}}</Avatar>
               <span class="result-name">{{item.name}}</span>
               <span class="result-url">{{item.url}}</span>
               <source-follow class="follow-btn"/>

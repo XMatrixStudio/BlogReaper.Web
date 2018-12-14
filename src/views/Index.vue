@@ -33,6 +33,7 @@
     margin-top: 36px;
   }
   .source-col {
+    max-width: 260px;
     margin-left: 20px;
     margin-top: 70px;
     .source-title {

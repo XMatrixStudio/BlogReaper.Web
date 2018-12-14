@@ -3,6 +3,22 @@ import TitleBar from '../../components/TitleBar'
 import ContentList from '../../components/Content/ContentList'
 export default {
   components: { ContentList, TitleBar },
+  computed: {
+    categories () {
+      return this.$store.state.categories
+    }
+  },
+  watch: {
+    categories () {
+      this.updateName()
+    },
+    $route () {
+      this.updateName()
+    }
+  },
+  mounted () {
+    this.updateName()
+  },
   data () {
     return {
       name: '全部',
@@ -42,6 +58,19 @@ export default {
     }
   },
   methods: {
+    updateName () {
+      if (this.$route.query.category === '0') {
+        this.name = '全部'
+      } else {
+        for (let i in this.categories) {
+          if (this.categories[i].id === this.$route.query.category) {
+            this.name = this.categories[i].name
+            break
+          }
+        }
+      }
+    },
+
     refresh () {
 
     },
@@ -50,8 +79,8 @@ export default {
 
     },
 
-    rename () {
-
+    rename (name) {
+      this.name = name
     }
   }
 }
@@ -59,18 +88,24 @@ export default {
 
 <template>
   <div class="feed-comp">
-    <title-bar title-en="Reaper list" :title-cn="name" @on-refresh="refresh" @on-remove="remove"  @on-remname="rename" title-color="#50bf72" :show-menu="true"/>
+    <title-bar
+      title-en="Reaper list"
+      :title-cn="name"
+      @on-refresh="refresh"
+      @on-remove="remove"
+      @on-rename="rename"
+      title-color="#50bf72"
+      :show-menu="true"
+    />
     <content-list :contents="contents"/>
   </div>
 </template>
 
 <style lang="scss">
 .feed-comp {
-
   text-align: center;
   width: 100%;
   margin: 20px auto;
   display: inline-block;
-
 }
 </style>

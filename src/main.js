@@ -5,8 +5,11 @@ import router from './router'
 import store from './store'
 import './plugins/iview.js'
 import { createProvider } from './vue-apollo'
+import service from './service/service'
 
 Vue.config.productionTip = false
+
+Vue.use(service)
 
 new Vue({
   router,
