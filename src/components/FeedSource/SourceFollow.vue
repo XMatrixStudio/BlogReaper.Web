@@ -73,6 +73,7 @@ export default {
             <Input
               ref="newNameInput"
               v-model="newCategoryName"
+              @on-enter="addCategory"
               class="add-input"
               placeholder="分类名"
               :autofocus="true"
@@ -100,7 +101,7 @@ export default {
     .select-item {
       .list-item {
         max-height: 200px;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
       .class-item {
         cursor: pointer;
@@ -139,7 +140,7 @@ export default {
     }
     .add-class {
       .control-btn {
-        margin: 6px 5px 6px 0;
+        margin: 10px 5px 6px 0;
       }
     }
   }

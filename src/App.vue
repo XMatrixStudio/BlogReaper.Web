@@ -14,6 +14,18 @@ export default {
   name: 'app',
   components: {
     NavBar
+  },
+  mounted () {
+    if (this.$route.name !== 'login') {
+      this.$service.user.getInfo.call(this, {},
+        (result) => {
+          console.log(result)
+          this.$store.commit('login', result.data.user)
+        }, (error) => {
+          console.log(error)
+          this.$store.commit('logout')
+        })
+    }
   }
 }
 </script>

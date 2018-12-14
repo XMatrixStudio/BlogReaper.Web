@@ -81,6 +81,10 @@ export default {
 
     rename (name) {
       this.name = name
+    },
+
+    gotoAdd () {
+      this.$router.push({ name: 'add' })
     }
   }
 }
@@ -97,7 +101,12 @@ export default {
       title-color="#50bf72"
       :show-menu="true"
     />
-    <content-list :contents="contents"/>
+    <div v-if="contents.length === 0" class="nothing-box">
+      <img src="../../assets/nothing.svg">
+      <p>暂时还没有东西，不如先去添加一点？</p>
+      <Button type="success" icon="md-add" size="large" @click="gotoAdd">添加</Button>
+    </div>
+    <content-list v-else :contents="contents"/>
   </div>
 </template>
 
@@ -107,5 +116,12 @@ export default {
   width: 100%;
   margin: 20px auto;
   display: inline-block;
+  .nothing-box {
+    font-size: 18px;
+    p {
+      user-select: none;
+      margin: 20px;
+    }
+  }
 }
 </style>

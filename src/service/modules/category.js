@@ -1,4 +1,5 @@
 const gql = require('graphql-tag')
+const util = require('./util.js')
 
 async function update () {
   const result = await this.$apollo.query({
@@ -16,7 +17,6 @@ async function update () {
     `,
     fetchPolicy: 'network-only'
   })
-  console.log('update', result)
   this.$store.commit('updateCategory', result.data)
 }
 
@@ -52,27 +52,7 @@ async function rename (data) {
 }
 
 export default {
-  update: wrapper(update),
-  add: wrapper(add),
-  rename: wrapper(rename)
-}
-
-function wrapper (fn) {
-  return async function (data, success, failed) {
-    try {
-      let result = await fn.call(this, data)
-      if (success !== undefined) {
-        success(result)
-      }
-    } catch (error) {
-      if (failed !== undefined) {
-        failed(error)
-      } else {
-        this.$Notice.error({
-          title: '发生错误',
-          desc: error
-        })
-      }
-    }
-  }
+  update: util.default.wrapper(update),
+  add: util.default.wrapper(add),
+  rename: util.default.wrapper(rename)
 }

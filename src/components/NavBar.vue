@@ -108,7 +108,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import gql from 'graphql-tag'
 export default {
   data () {
     return {
@@ -136,45 +135,20 @@ export default {
     },
 
     async logout () {
-      try {
-        await this.$apollo.mutate({
-          mutation: gql`
-            mutation {
-              logout
-            }
-          `
-        })
-        this.$store.commit('logout')
+      await this.$service.user.logout.call(this, {}, () => {
         this.$router.push({ name: 'index' })
-      } catch (error) {
-
-      }
+      })
     },
 
     async onClickLogin () {
-      try {
-        const result = await this.$apollo.mutate({
-          mutation: gql`
-            mutation ($routeName: String!) {
-              createLoginUrl(backUrl: $routeName)
-            }
-          `,
-          variables: {
-            routeName: this.$route.name
-          }
-        })
+      await this.$service.user.getLogin.call(this, {
+        routeName: this.$route.name
+      }, (result) => {
         window.location.href = result.data.createLoginUrl
-      } catch (e) {
-        this.$Notice.error({
-          title: '发生错误',
-          desc: e
-        })
-        console.log(e)
-      }
+      })
     },
 
     selectMenu (name, e) {
-      // console.log(name, e)
       if (name === '-1') {
         this.menuSelect = 'home'
         return
@@ -182,15 +156,14 @@ export default {
       this.$router.push({ name: name })
     }
   },
-  mounted () {
-    if (this.$route.name === 'index') {
-      this.menuSelect = 'index'
-    } else {
-      this.menuSelect = 'home'
+  watch: {
+    $route () {
+      if (this.$route.name === 'index') {
+        this.menuSelect = 'index'
+      } else {
+        this.menuSelect = 'home'
+      }
     }
-    // if (['home', 'index'].indexOf(this.$route.name) !== -1) {
-    //   this.menuSelect = this.$route.name
-    // }
   }
 }
 </script>
