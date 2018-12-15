@@ -14,7 +14,7 @@ export default {
       showDetail: false,
       searchText: '',
       sourceData: {
-        name: 'Zhenly'
+        title: ''
       },
       searchResult: [],
       helpText: '快去搜索点东西吧'
@@ -38,7 +38,9 @@ export default {
 
     showDrawer (i) {
       this.showDetail = true
-      this.sourceData.name = this.searchResult[i].name
+      this.sourceData.title = this.searchResult[i].title
+      this.sourceData.publicId = this.searchResult[i].publicId
+      this.$refs.categoryDraw.loadData()
     },
 
     async onSearch () {
@@ -132,7 +134,7 @@ export default {
       </div>
     </div>
     <Drawer title="阅读源" width="550" :closable="true" v-model="showDetail">
-      <source-draw :source-data="sourceData"/>
+      <source-draw ref="categoryDraw" :source-data="sourceData"/>
     </Drawer>
   </div>
 </template>

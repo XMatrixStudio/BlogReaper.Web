@@ -30,7 +30,8 @@ import ContentList from '../../components/Content/ContentList'
 export default {
   components: { TitleBar, ContentList },
   methods: {
-    async refresh () {
+    async refreshData (callback) {
+      this.$Loading.start()
       this.hasMore = true
       this.currentPage = 1
       await this.$service.articles.getLater.call(this, {
@@ -39,6 +40,23 @@ export default {
       }, (result) => {
         this.hasMore = result.data.user.laterArticles.length === 5
         this.contents = result.data.user.laterArticles
+        this.$Loading.finish()
+        if (callback !== undefined) callback()
+      })
+    },
+
+    async refresh () {
+      this.isLoading = this.$Message.loading({
+        content: '获取数据...',
+        duration: 0
+      })
+      this.refreshData(() => {
+        setTimeout(() => {
+          this.isLoading()
+          setTimeout(() => {
+            this.$Message.success('已获取最新文章数据')
+          }, 300)
+        }, 300)
       })
     },
 
@@ -64,7 +82,7 @@ export default {
     }
   },
   mounted () {
-    this.refresh()
+    this.refreshData()
   }
 }
 </script>

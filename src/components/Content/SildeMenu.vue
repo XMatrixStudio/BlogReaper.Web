@@ -110,13 +110,13 @@ export default {
         <Icon type="md-bookmark"></Icon>稍后阅读
       </MenuItem>
 
-      <div class="menu-title">Reaper
-        <Icon
+      <div class="menu-title">My Reaper
+        <!-- <Icon
           ref
           @click="gotoManger"
           :class="[{'select-icon' : $route.name === 'manger'},'right-icon']"
           type="md-settings"
-        />
+        /> -->
         <Icon
           @click="gotoAdd"
           :class="[{'select-icon' : $route.name === 'add'},'right-icon']"

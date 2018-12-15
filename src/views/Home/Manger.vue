@@ -2,7 +2,6 @@
   <div class="manger-comp">
     <title-bar title-en="Organize Sources" title-cn="阅读源管理" title-color="#e7a4c4" :show-refresh="false"/>
     <div class="search-box">
-      <Input class="search" prefix="ios-search" placeholder="Source Name"/>
       <Button id="unfollow" class="btn" ref="unfollow"><Icon class="btn-icon" type="ios-trash-outline"/><span class="btn-text">UNFOLLOW</span></Button>
       <strong id="selected-text" ref="selectedText">{{selected_num}}</strong>
     </div>
@@ -26,7 +25,7 @@
   .search-box {
     position: relative;
     max-width: 600px;
-    margin: 20px auto 0px auto;
+    margin: 0 auto;
     text-align: left;
     .search {
       display: block;
@@ -189,7 +188,6 @@ export default {
       this.data1.splice(index, 1)
     },
     changeChose (selection) {
-      console.log(selection)
       this.selected_num = 'Select ' + selection.length + ' of ' + this.data1.length
       if (selection.length === 0) {
         this.$refs.unfollow.$el.style.opacity = 0

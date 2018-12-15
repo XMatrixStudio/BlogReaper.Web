@@ -6,7 +6,7 @@ import Login from './views/Login.vue'
 import ReadLater from './views/Home/ReadLater.vue'
 // import Today from './views/Home/Today.vue'
 import Add from './views/Home/Add.vue'
-import Manger from './views/Home/Manger.vue'
+// import Manger from './views/Home/Manger.vue'
 import FeedList from './views/Home/FeedList.vue'
 
 Vue.use(Router)
@@ -29,10 +29,6 @@ export default new Router({
       path: '/home',
       component: Home,
       children: [{
-        path: '/manger',
-        name: 'manger',
-        component: Manger
-      }, {
         path: '/add',
         name: 'add',
         component: Add

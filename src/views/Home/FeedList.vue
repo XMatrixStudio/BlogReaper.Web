@@ -53,10 +53,25 @@ export default {
           }
         }
       }
-      this.refresh()
+      this.refreshData()
     },
 
     async refresh () {
+      this.isLoading = this.$Message.loading({
+        content: '获取数据...',
+        duration: 0
+      })
+      this.refreshData(() => {
+        setTimeout(() => {
+          this.isLoading()
+          setTimeout(() => {
+            this.$Message.success('已获取最新文章数据')
+          }, 300)
+        }, 300)
+      })
+    },
+
+    async refreshData (callback) {
       this.contents = []
       this.currentPage = 1
       this.$Loading.start()
@@ -66,7 +81,6 @@ export default {
           numPerPage: 3
         }, (result) => {
           for (let feed of result.data.user.categories) {
-            console.log(feed.feeds)
             for (let i in feed.feeds) {
               this.contents.push(...feed.feeds[i].articles)
             }
@@ -75,6 +89,7 @@ export default {
             return new Date(b.published).getTime() - new Date(a.published).getTime()
           })
           this.$Loading.finish()
+          if (callback !== undefined) callback()
         })
       } else if (this.$route.query.feed !== undefined) {
         await this.$service.feed.getById.call(this, {
@@ -83,13 +98,13 @@ export default {
           numPerPage: 5
         }, (result) => {
           for (let feed of result.data.user.categories) {
-            console.log(feed.feeds)
             if (feed.feeds.length !== 0) {
               this.contents.push(...feed.feeds[0].articles)
               break
             }
           }
           this.$Loading.finish()
+          if (callback !== undefined) callback()
         })
       } else {
         await this.$service.category.getById.call(this, {
@@ -101,6 +116,7 @@ export default {
             this.contents.push(...feed.articles)
           }
           this.$Loading.finish()
+          if (callback !== undefined) callback()
         })
       }
     },
@@ -164,7 +180,6 @@ export default {
           numPerPage: 5
         }, (result) => {
           for (let feed of result.data.user.categories) {
-            console.log(feed.feeds)
             if (feed.feeds.length !== 0) {
               this.contents.push(...feed.feeds[0].articles)
               if (feed.feeds[0].articles.length !== 5) {

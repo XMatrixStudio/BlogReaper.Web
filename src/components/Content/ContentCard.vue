@@ -27,8 +27,6 @@ export default {
       if (pictureUrl.indexOf('http') === -1) {
         let url = this.content.url
         let host = url.substr(0, url.substr(url.indexOf('//') + 2).indexOf('/') + url.indexOf('//') + 2)
-        console.log(pictureUrl)
-        console.log(host + pictureUrl)
         return host + pictureUrl
       }
       return pictureUrl
@@ -52,6 +50,11 @@ export default {
         later: later
       }, () => {
         this.content.later = later
+        if (later === true) {
+          this.$Notice.success({
+            title: '已添加到稍后阅读'
+          })
+        }
       })
     }
   }

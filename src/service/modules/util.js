@@ -10,10 +10,15 @@ export default {
         if (failed !== undefined) {
           failed(error)
         } else {
-          this.$Notice.error({
-            title: '发生错误',
-            desc: error
-          })
+          if (error.message === 'GraphQL error: not_login') {
+            this.$router.push({ name: 'index' })
+            this.$store.commit('logout')
+          } else {
+            this.$Notice.error({
+              title: '发生错误',
+              desc: error
+            })
+          }
         }
       }
     }

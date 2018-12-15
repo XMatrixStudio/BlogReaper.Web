@@ -34,7 +34,6 @@ export default {
           id: this.publicId,
           categoryId: categoryId
         }, async (result) => {
-          console.log(result)
           await this.$service.category.update.call(this)
         })
         this.visible = false
@@ -71,11 +70,9 @@ export default {
     async addCategory () {
       await this.$service.category.add.call(this, this.newCategoryName,
         (result) => {
-          console.log(result)
           this.isAdd = false
         },
         (error) => {
-          console.log(error.message)
           if (error.message.indexOf('repeat_name') !== -1) {
             this.$Notice.error({
               title: '重复的分类'

@@ -56,6 +56,7 @@ export default {
     margin: 16px auto;
   }
   .load-more {
+    text-align: center;
     margin: auto;
     max-width: 600px;
     user-select: none;

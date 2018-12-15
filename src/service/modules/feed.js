@@ -90,7 +90,7 @@ async function add (data) {
 async function search (data) {
   const result = await this.$apollo.query({
     query: gql`
-      query($keyword: String!) {
+      query($keyword: String) {
         feeds(keyword: $keyword) {
           id
           publicId
@@ -151,6 +151,39 @@ async function getById (data) {
   return result
 }
 
+async function getByPublicId (data) {
+  const result = await this.$apollo.query({
+    query: gql`
+      query($id: String!, $page: Int!, $numPerPage: Int!) {
+        feeds (id: $id) {
+          id
+          publicId
+          title
+          articles(page: $page, numPerPage: $numPerPage) {
+            url
+            title
+            published
+            updated
+            later
+            pictureUrl
+            summary
+            content
+            feedId
+            feedTitle
+          }
+        }
+      }
+    `,
+    variables: {
+      id: data.id,
+      page: data.page,
+      numPerPage: data.numPerPage
+    },
+    fetchPolicy: 'network-only'
+  })
+  return result
+}
+
 async function popular (data) {
   const result = await this.$apollo.query({
     query: gql`
@@ -179,5 +212,6 @@ export default {
   search: util.default.wrapper(search),
   rename: util.default.wrapper(rename),
   getById: util.default.wrapper(getById),
-  popular: util.default.wrapper(popular)
+  popular: util.default.wrapper(popular),
+  getByPublicId: util.default.wrapper(getByPublicId)
 }

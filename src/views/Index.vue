@@ -77,25 +77,17 @@ export default {
     ContentList, SourceCard, TitleBar
   },
   methods: {
-    async refresh () {
+    async refreshData (callback) {
       this.currentPage = 1
       this.$Loading.start()
-      this.isLoading = this.$Message.loading({
-        content: '获取数据...',
-        duration: 0
-      })
-
       await this.$service.articles.popular.call(this, {
         page: 1,
         numPerPage: 7
       }, (result) => {
         this.$Loading.finish()
-        setTimeout(() => {
-          this.isLoading()
-          setTimeout(() => {
-            this.$Message.success('已获取最新文章数据')
-          }, 300)
-        }, 300)
+        if (callback !== undefined) {
+          callback()
+        }
         this.contents = result.data.popularArticles
       })
       await this.$service.feed.popular.call(this, {
@@ -103,6 +95,21 @@ export default {
         numPerPage: 7
       }, (result) => {
         this.sourceDatas = result.data.popularFeeds
+      })
+    },
+
+    async refresh () {
+      this.isLoading = this.$Message.loading({
+        content: '获取数据...',
+        duration: 0
+      })
+      this.refreshData(() => {
+        setTimeout(() => {
+          this.isLoading()
+          setTimeout(() => {
+            this.$Message.success('已获取最新文章数据')
+          }, 300)
+        }, 300)
       })
     },
 
@@ -131,7 +138,7 @@ export default {
   },
   async mounted () {
     await this.$service.category.update.call(this, {}, () => { }, () => { })
-    this.refresh()
+    this.refreshData()
   }
 }
 </script>

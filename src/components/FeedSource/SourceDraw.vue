@@ -59,23 +59,29 @@ export default {
       return followed
     },
 
-    loadMore () {
-
+    async loadMore () {
+      this.currentPage++
+      this.$Loading.start()
+      await this.$service.feed.getByPublicId.call(this, {
+        id: this.sourceData.publicId,
+        page: this.currentPage,
+        numPerPage: 4
+      }, (result) => {
+        this.hasMore = result.data.feeds[0].articles.length === 4
+        this.contents.push(...result.data.feeds[0].articles)
+        this.$Loading.finish()
+        this.$refs.contentList.loadDone()
+      })
     },
 
     async loadData () {
-      await this.$service.category.getById.call(this, {
+      await this.$service.feed.getByPublicId.call(this, {
         id: this.sourceData.publicId,
         page: 1,
         numPerPage: 4
       }, (result) => {
-        this.hasMore = false
-        for (let feed of result.data.user.categories[0].feeds) {
-          this.contents.push(...feed.articles)
-          this.hasMore = feed.articles.length !== 0
-        }
-        this.$Loading.finish()
-        this.$refs.contentList.loadDone()
+        this.hasMore = result.data.feeds[0].articles.length === 4
+        this.contents = result.data.feeds[0].articles
       })
     }
   },
@@ -88,7 +94,8 @@ export default {
   data () {
     return {
       contents: [],
-      hasMore: false
+      hasMore: true,
+      currentPage: 1
     }
   }
 }
