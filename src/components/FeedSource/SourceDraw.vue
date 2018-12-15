@@ -1,8 +1,10 @@
 <template>
   <div class="source-draw">
     <div class="drawer-control">
-      <span class="drawer-title">{{sourceData.name}}</span>
-      <source-follow class="drawer-btn" />
+      <span class="drawer-title">{{sourceData.title}}</span>
+      <source-follow class="drawer-btn"
+          :current-data="isFollow(sourceData.publicId)"
+          :public-id="sourceData.publicId" />
     </div>
     <content-list :contents="contents"/>
   </div>
@@ -33,6 +35,29 @@ export default {
     ContentList, SourceFollow
   },
   props: ['sourceData'],
+  methods: {
+    isFollow (id) {
+      let followed = []
+      for (let i in this.categories) {
+        for (let feed of this.categories[i].feeds) {
+          if (feed.publicId === id) {
+            followed.push({
+              categoryId: this.categories[i].id,
+              feedId: feed.id
+            })
+          }
+        }
+      }
+      console.log(followed)
+      return followed
+    }
+  },
+  computed: {
+    categories () {
+      return this.$store.state.categories
+    }
+  },
+
   data () {
     return {
       contents: [{

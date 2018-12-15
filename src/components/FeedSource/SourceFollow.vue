@@ -19,6 +19,9 @@ export default {
   computed: {
     categories () {
       return this.$store.state.categories
+    },
+    isLogin () {
+      return this.$store.state.isLogin
     }
   },
   mounted () {
@@ -102,7 +105,7 @@ export default {
 
 <template>
   <div class="follow-div">
-    <Poptip placement="bottom" v-model="visible">
+    <Poptip v-if="isLogin" placement="bottom" v-model="visible">
       <Button icon="md-add" v-if="currentData.length === 0" @click="isAdd = false">关注</Button>
       <Button type="success" v-if="currentData.length !== 0" @click="isAdd = false">已关注</Button>
       <div class="title" slot="title">{{isAdd ? '新建分类': '添加到分类'}}</div>

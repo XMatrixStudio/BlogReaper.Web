@@ -163,6 +163,7 @@ export default {
       } else if (name === '-1') {
         this.menuSelect = 'home'
       }
+      this.$router.push({ name: name })
     }
   },
   watch: {

@@ -43,11 +43,7 @@ export default {
   },
 
   async mounted () {
-    try {
-      this.$service.category.update.call(this)
-    } catch (e) {
-      console.log(e)
-    }
+    await this.$service.category.update.call(this)
   }
 }
 </script>

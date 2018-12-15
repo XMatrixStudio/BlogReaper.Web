@@ -44,13 +44,13 @@ async function rename (data) {
 async function edit (data) {
   const result = await this.$apollo.mutate({
     mutation: gql`
-      mutation($id: String!, $categoryId: [String!]) {
-        editFeed(id: $id, categoryId: $categoryId)
+      mutation($id: String!, $categoryIds: [String!]) {
+        editFeed(id: $id, categoryIds: $categoryIds)
       }
     `,
     variables: {
       id: data.id,
-      categoryId: data.categoryIds
+      categoryIds: data.categoryIds
     }
   })
   return result
@@ -113,11 +113,59 @@ async function search (data) {
   return result
 }
 
+async function getById (data) {
+  const result = await this.$apollo.query({
+    query: gql`
+      query($feedId: String!) {
+        user {
+          categories {
+            name
+            feeds(id: $feedId) {
+              id
+              title
+              articles {
+                title
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      feedId: data.feedId
+    },
+    fetchPolicy: 'network-only'
+  })
+  return result
+}
+
+async function popular (data) {
+  const result = await this.$apollo.query({
+    query: gql`
+      query($page: Int!, $numPerPage: Int!) {
+        popularFeeds(page: $page, numPerPage: $numPerPage) {
+          publicId
+          title
+          url
+        }
+      }
+    `,
+    variables: {
+      page: data.page,
+      numPerPage: data.numPerPage
+    },
+    fetchPolicy: 'network-only'
+  })
+  return result
+}
+
 export default {
   addPublicFeedOrNot: util.default.wrapper(addPublicFeedOrNot),
   add: util.default.wrapper(add),
   edit: util.default.wrapper(edit),
   remove: util.default.wrapper(remove),
   search: util.default.wrapper(search),
-  rename: util.default.wrapper(rename)
+  rename: util.default.wrapper(rename),
+  getById: util.default.wrapper(getById),
+  popular: util.default.wrapper(popular)
 }

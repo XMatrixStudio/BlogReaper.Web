@@ -1,8 +1,8 @@
 <template>
   <div class="source-comp">
     <div @click="openDraw">
-      <Avatar shape="square" :src="sourceData.image" size="large">{{sourceData.name[0]}}</Avatar>
-      <div class="source-info">{{sourceData.name}}</div>
+      <Avatar shape="square" :src="sourceData.image" size="large">{{sourceData.title[0]}}</Avatar>
+      <div class="source-info">{{sourceData.title}}</div>
     </div>
     <Drawer title="阅读源" width="550" :closable="true" v-model="showDetail">
       <source-draw :source-data="sourceData"/>
