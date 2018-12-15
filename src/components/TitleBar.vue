@@ -37,7 +37,7 @@ export default {
       } else if (this.newName !== this.titleCn) {
         if (this.isFeed) {
           await this.$service.feed.rename.call(this, {
-            id: this.$route.query.category,
+            id: this.$route.query.feed,
             title: this.newName
           }, async (result) => {
             this.$emit('on-rename', this.newName)
@@ -120,6 +120,12 @@ export default {
   margin: 20px auto;
   display: inline-block;
   .title-box {
+    transition: all 0.4s;
+    &:hover {
+      .title > .list-control {
+        opacity: 1;
+      }
+    }
     .title-top {
       user-select: none;
       text-align: left;
@@ -141,6 +147,8 @@ export default {
         vertical-align: middle;
       }
       .list-control {
+        transition: all 0.4s;
+        opacity: 0;
         float: right;
         .btn-refresh {
           margin-left: 10px;

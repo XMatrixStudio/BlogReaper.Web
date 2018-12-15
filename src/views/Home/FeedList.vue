@@ -22,40 +22,10 @@ export default {
   data () {
     return {
       name: '全部',
-      contents: [{
-        id: 1,
-        title: 'Python面向对象基础：编码细节和注意事项',
-        date: new Date(new Date().getTime() - 1008611),
-        source: '博客园',
-        image: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E',
-        text: '【摘要】在前面，我用了3篇文章解释python的面向对象： 1. "面向对象：从代码复用开始" 2. "面向对象：设置对象属性" 3. "类和对象的名称空间" 本篇是第4篇，用一个完整的示例来解释面向对象的一些细节。 例子的模型是父类Employe和子类Manager，从类的定义开始，一步步完善直到类变得完',
-        url: 'http://www.cnblogs.com/f-ck-need-u/p/10099735.html'
-      }, {
-        id: 2,
-        title: 'Python面向对象基础：编码细节和注意事项',
-        date: new Date(new Date().getTime() - 1008611),
-        source: '博客园',
-        image: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E',
-        text: '【摘要】在前面，我用了3篇文章解释python的面向对象： 1. "面向对象：从代码复用开始" 2. "面向对象：设置对象属性" 3. "类和对象的名称空间" 本篇是第4篇，用一个完整的示例来解释面向对象的一些细节。 例子的模型是父类Employe和子类Manager，从类的定义开始，一步步完善直到类变得完',
-        url: 'http://www.cnblogs.com/f-ck-need-u/p/10099735.html'
-      }, {
-        id: 3,
-        title: 'Python面向对象基础：编码细节和注意事项',
-        date: new Date(new Date().getTime() - 1008611),
-        source: '博客园',
-        image: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E',
-        text: '【摘要】在前面，我用了3篇文章解释python的面向对象： 1. "面向对象：从代码复用开始" 2. "面向对象：设置对象属性" 3. "类和对象的名称空间" 本篇是第4篇，用一个完整的示例来解释面向对象的一些细节。 例子的模型是父类Employe和子类Manager，从类的定义开始，一步步完善直到类变得完',
-        url: 'http://www.cnblogs.com/f-ck-need-u/p/10099735.html'
-      }, {
-        id: 4,
-        title: 'Python面向对象基础：编码细节和注意事项',
-        date: new Date(new Date().getTime() - 1008611),
-        source: '博客园',
-        image: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E',
-        text: '【摘要】在前面，我用了3篇文章解释python的面向对象： 1. "面向对象：从代码复用开始" 2. "面向对象：设置对象属性" 3. "类和对象的名称空间" 本篇是第4篇，用一个完整的示例来解释面向对象的一些细节。 例子的模型是父类Employe和子类Manager，从类的定义开始，一步步完善直到类变得完',
-        url: 'http://www.cnblogs.com/f-ck-need-u/p/10099735.html'
-      }],
-      isFeed: false
+      contents: [],
+      isFeed: false,
+      hasMore: true,
+      currentPage: 1
     }
   },
   methods: {
@@ -64,28 +34,99 @@ export default {
         this.name = '全部'
       } else {
         for (let i in this.categories) {
-          if (this.categories[i].id === this.$route.query.category) {
+          if (this.categories[i].id === this.$route.query.category && this.$route.query.feed === undefined) {
             this.name = this.categories[i].name
             this.isFeed = false
+            this.currentPage = 1
+            this.hasMore = true
             break
           }
           for (let feed of this.categories[i].feeds) {
-            if (feed.id === this.$route.query.category) {
+            if (feed.id === this.$route.query.feed) {
               this.name = feed.title
               this.isFeed = true
+              this.currentPage = 1
+              this.hasMore = true
+              // this.refreshFeed()
               break
             }
           }
         }
       }
+      this.refresh()
     },
 
-    refresh () {
-
+    async refresh () {
+      this.contents = []
+      this.currentPage = 1
+      this.$Loading.start()
+      if (this.$route.query.category === '0') {
+        await this.$service.articles.getAll.call(this, {
+          page: 1,
+          numPerPage: 3
+        }, (result) => {
+          for (let feed of result.data.user.categories) {
+            console.log(feed.feeds)
+            for (let i in feed.feeds) {
+              this.contents.push(...feed.feeds[i].articles)
+            }
+          }
+          this.contents.sort((a, b) => {
+            return new Date(b.published).getTime() - new Date(a.published).getTime()
+          })
+          this.$Loading.finish()
+        })
+      } else if (this.$route.query.feed !== undefined) {
+        await this.$service.feed.getById.call(this, {
+          feedId: this.$route.query.feed,
+          page: 1,
+          numPerPage: 5
+        }, (result) => {
+          for (let feed of result.data.user.categories) {
+            console.log(feed.feeds)
+            if (feed.feeds.length !== 0) {
+              this.contents.push(...feed.feeds[0].articles)
+              break
+            }
+          }
+          this.$Loading.finish()
+        })
+      } else {
+        await this.$service.category.getById.call(this, {
+          id: this.$route.query.category,
+          page: 1,
+          numPerPage: 4
+        }, (result) => {
+          for (let feed of result.data.user.categories[0].feeds) {
+            this.contents.push(...feed.articles)
+          }
+          this.$Loading.finish()
+        })
+      }
     },
 
-    remove () {
-
+    async remove () {
+      if (this.$route.query.feed === undefined) {
+        await this.$service.category.remove.call(this, {
+          id: this.$route.query.category
+        }, async () => {
+          this.$Notice.success({
+            title: '删除分类成功'
+          })
+          this.$router.push({ name: 'feed', query: { category: '0' } })
+          await this.$service.category.update.call(this)
+        })
+      } else {
+        await this.$service.feed.remove.call(this, {
+          id: this.$route.query.feed
+        }, async () => {
+          this.$Notice.success({
+            title: '删除阅读源成功'
+          })
+          this.$router.push({ name: 'feed', query: { category: '0' } })
+          await this.$service.category.update.call(this)
+        })
+      }
     },
 
     rename (name) {
@@ -94,6 +135,64 @@ export default {
 
     gotoAdd () {
       this.$router.push({ name: 'add' })
+    },
+
+    async loadMore () {
+      this.currentPage++
+      this.$Loading.start()
+      if (this.$route.query.category === '0') {
+        await this.$service.articles.getAll.call(this, {
+          page: this.currentPage,
+          numPerPage: 3
+        }, (result) => {
+          this.hasMore = false
+          for (let feed of result.data.user.categories) {
+            for (let i in feed.feeds) {
+              if (feed.feeds[i].articles.length !== 0) {
+                this.hasMore = true
+              }
+              this.contents.push(...feed.feeds[i].articles)
+            }
+          }
+          this.$Loading.finish()
+          this.$refs.contentList.loadDone()
+        })
+      } else if (this.$route.query.feed !== undefined) {
+        await this.$service.feed.getById.call(this, {
+          feedId: this.$route.query.feed,
+          page: this.currentPage,
+          numPerPage: 5
+        }, (result) => {
+          for (let feed of result.data.user.categories) {
+            console.log(feed.feeds)
+            if (feed.feeds.length !== 0) {
+              this.contents.push(...feed.feeds[0].articles)
+              if (feed.feeds[0].articles.length !== 5) {
+                this.hasMore = false
+              }
+              break
+            }
+          }
+          this.$Loading.finish()
+          this.$refs.contentList.loadDone()
+        })
+      } else {
+        await this.$service.category.getById.call(this, {
+          id: this.$route.query.category,
+          page: this.currentPage,
+          numPerPage: 4
+        }, (result) => {
+          this.hasMore = false
+          for (let feed of result.data.user.categories[0].feeds) {
+            this.contents.push(...feed.articles)
+            if (feed.articles.length !== 0) {
+              this.hasMore = true
+            }
+          }
+          this.$Loading.finish()
+          this.$refs.contentList.loadDone()
+        })
+      }
     }
   }
 }
@@ -116,7 +215,13 @@ export default {
       <p>暂时还没有东西，不如先去添加一点？</p>
       <Button type="success" icon="md-add" size="large" @click="gotoAdd">添加</Button>
     </div>
-    <content-list v-else :contents="contents"/>
+    <content-list
+      ref="contentList"
+      v-else
+      :contents="contents"
+      :has-more="hasMore"
+      @load-more="loadMore"
+    />
   </div>
 </template>
 

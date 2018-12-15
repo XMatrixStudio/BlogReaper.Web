@@ -5,7 +5,7 @@
       <div class="source-info">{{sourceData.title}}</div>
     </div>
     <Drawer title="阅读源" width="550" :closable="true" v-model="showDetail">
-      <source-draw :source-data="sourceData"/>
+      <source-draw ref="categoryDraw" :source-data="sourceData"/>
     </Drawer>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
   methods: {
     openDraw () {
       this.showDetail = true
+      this.$refs.categoryDraw.loadData()
     }
   },
   data () {

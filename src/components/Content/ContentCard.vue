@@ -1,28 +1,94 @@
+<script>
+export default {
+  props: {
+    content: {
+      require: true
+    },
+    showLater: {
+      default: true
+    }
+  },
+  data () {
+    return {
+    }
+  },
+  computed: {
+    publishedDate () {
+      return new Date(this.content.published)
+    },
+    htmlText () {
+      if (this.content === undefined || this.content.summary === undefined) return ''
+      let text = this.content.summary !== '' ? this.content.summary : this.content.content
+      return text.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/\s+/g, ' ')
+    },
+    imageUrl () {
+      let pictureUrl = this.content.pictureUrl
+      if (pictureUrl === '' || pictureUrl === undefined) return require('../../assets/icon.svg')
+      if (pictureUrl.indexOf('http') === -1) {
+        let url = this.content.url
+        let host = url.substr(0, url.substr(url.indexOf('//') + 2).indexOf('/') + url.indexOf('//') + 2)
+        console.log(pictureUrl)
+        console.log(host + pictureUrl)
+        return host + pictureUrl
+      }
+      return pictureUrl
+    }
+  },
+  methods: {
+    ToText (HTML) {
+      var input = HTML
+      if (input === undefined) return ''
+
+      return input
+        .replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '')
+        .replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ')
+        .replace(/>/g, ' ').replace(/&#39;/g, '').substr(0, 100)
+    },
+
+    async editLater (later) {
+      await this.$service.articles.setLater.call(this, {
+        url: this.content.url,
+        feedId: this.content.feedId,
+        later: later
+      }, () => {
+        this.content.later = later
+      })
+    }
+  }
+}
+</script>
+
 <template>
   <div class="content-comp">
     <div class="title-text">
       {{content.title}}
-      <div class="control-box">
+      <div class="control-box" v-if="showLater">
         <div class="btn-bookmark" title="稍后阅读">
-          <Icon v-show="false" type="ios-bookmark-outline"/>
-          <Icon type="ios-bookmark"/>
+          <Icon
+            @click="editLater(false)"
+            v-if="content.later"
+            class="has-later"
+            type="ios-bookmark"
+          />
+          <Icon
+            @click="editLater(true)"
+            v-if="!content.later"
+            class="no-later"
+            type="ios-bookmark"
+          />
         </div>
-        <!-- 删除功能暂时关闭
-        <div class="btn-close">
-          <Icon type="md-close"/>
-        </div>
-        -->
       </div>
     </div>
     <div class="info-text">
-      {{content.source}} /
-      <Time :time="content.date"/>
+      <span v-if="content.feedTitle !== ''">{{content.feedTitle}} /</span>
+
+      <Time :time="publishedDate"/>
       <a target="blank" :href="content.url">阅读原文</a>
     </div>
     <div class="div-image">
-      <img class="image" :src="content.image">
+      <img class="image" :src="imageUrl">
     </div>
-    <div class="div-text">{{content.text}} ...</div>
+    <div class="div-text" v-html="htmlText">..</div>
   </div>
 </template>
 
@@ -34,9 +100,13 @@
   max-width: 600px;
   text-align: left;
   color: rgb(44, 44, 44);
+  transition: all 0.4s;
   &:hover {
-    .title-text > .control-box {
+    .title-text > .control-box > .btn-bookmark > .no-later {
       opacity: 1;
+    }
+    .title-text {
+      transform: translateX(4px);
     }
   }
   .title-text {
@@ -44,15 +114,22 @@
     font-size: 18px;
     font-weight: bold;
     margin: 15px 0 0 0;
+    transition: all 0.4s;
     .control-box {
-      opacity: 0;
       float: right;
       color: rgb(133, 133, 133);
       .btn-bookmark {
+        font-size: 24px;
         transition: all 0.4s;
         &:hover {
           display: inline-block;
           color: #52c071;
+        }
+        .has-later {
+          color: #52c071;
+        }
+        .no-later {
+          opacity: 0;
         }
       }
       .btn-close {
@@ -93,21 +170,11 @@
     margin: 15px 0 0 150px;
     font-size: 14px;
     // height: 100px;
-    overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
     overflow: hidden;
+    max-height: 140px;
   }
 }
 </style>
-
-<script>
-export default {
-  props: ['content'],
-  data () {
-    return {
-    }
-  }
-}
-</script>

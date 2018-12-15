@@ -30,6 +30,9 @@ export default {
 </script>
 
 <style>
+body {
+  overflow-y: scroll;
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -42,6 +45,6 @@ export default {
   min-height: calc(100vh - 60px);
 }
 .ivu-layout {
-  background: #fefefe!important;
+  background: #fefefe !important;
 }
 </style>

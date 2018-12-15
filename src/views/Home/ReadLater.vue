@@ -1,7 +1,17 @@
 <template>
   <div class="read-later">
-    <title-bar  title-en="Read later" title-cn="稍后阅读" @on-refresh="refresh"  title-color="#c75454"/>
-    <content-list :contents="contents"/>
+    <title-bar title-en="Read later" title-cn="稍后阅读" @on-refresh="refresh" title-color="#c75454"/>
+    <content-list
+      ref="contentList"
+      v-if="contents.length !== 0"
+      :contents="contents"
+      :has-more="hasMore"
+      @load-more="loadMore"
+    />
+    <div v-if="contents.length === 0" class="nothing-box">
+      <img src="../../assets/nothing.svg">
+      <p>暂时还没有东西，不如先去添加一点？</p>
+    </div>
   </div>
 </template>
 
@@ -20,46 +30,41 @@ import ContentList from '../../components/Content/ContentList'
 export default {
   components: { TitleBar, ContentList },
   methods: {
-    refresh () {
-      console.log('r')
+    async refresh () {
+      this.hasMore = true
+      this.currentPage = 1
+      await this.$service.articles.getLater.call(this, {
+        page: 1,
+        numPerPage: 5
+      }, (result) => {
+        this.hasMore = result.data.user.laterArticles.length === 5
+        this.contents = result.data.user.laterArticles
+      })
+    },
+
+    async loadMore () {
+      this.$Loading.start()
+      this.currentPage++
+      await this.$service.articles.getLater.call(this, {
+        page: this.currentPage,
+        numPerPage: 5
+      }, (result) => {
+        this.hasMore = result.data.user.laterArticles.length !== 5
+        this.contents.push(...result.data.user.laterArticles)
+        this.$Loading.finish()
+        this.$refs.contentList.loadDone()
+      })
     }
   },
   data () {
     return {
-      contents: [{
-        id: 1,
-        title: 'Python面向对象基础：编码细节和注意事项',
-        date: new Date(new Date().getTime() - 1008611),
-        source: '博客园',
-        image: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E',
-        text: '【摘要】在前面，我用了3篇文章解释python的面向对象： 1. "面向对象：从代码复用开始" 2. "面向对象：设置对象属性" 3. "类和对象的名称空间" 本篇是第4篇，用一个完整的示例来解释面向对象的一些细节。 例子的模型是父类Employe和子类Manager，从类的定义开始，一步步完善直到类变得完',
-        url: 'http://www.cnblogs.com/f-ck-need-u/p/10099735.html'
-      }, {
-        id: 2,
-        title: 'Python面向对象基础：编码细节和注意事项',
-        date: new Date(new Date().getTime() - 1008611),
-        source: '博客园',
-        image: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E',
-        text: '【摘要】在前面，我用了3篇文章解释python的面向对象： 1. "面向对象：从代码复用开始" 2. "面向对象：设置对象属性" 3. "类和对象的名称空间" 本篇是第4篇，用一个完整的示例来解释面向对象的一些细节。 例子的模型是父类Employe和子类Manager，从类的定义开始，一步步完善直到类变得完',
-        url: 'http://www.cnblogs.com/f-ck-need-u/p/10099735.html'
-      }, {
-        id: 3,
-        title: 'Python面向对象基础：编码细节和注意事项',
-        date: new Date(new Date().getTime() - 1008611),
-        source: '博客园',
-        image: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E',
-        text: '【摘要】在前面，我用了3篇文章解释python的面向对象： 1. "面向对象：从代码复用开始" 2. "面向对象：设置对象属性" 3. "类和对象的名称空间" 本篇是第4篇，用一个完整的示例来解释面向对象的一些细节。 例子的模型是父类Employe和子类Manager，从类的定义开始，一步步完善直到类变得完',
-        url: 'http://www.cnblogs.com/f-ck-need-u/p/10099735.html'
-      }, {
-        id: 4,
-        title: 'Python面向对象基础：编码细节和注意事项',
-        date: new Date(new Date().getTime() - 1008611),
-        source: '博客园',
-        image: 'http://7x2wdd.com2.z0.glb.qiniucdn.com/b87aa0fb55c9b63ea85ee6a03b4a649e?imageMogr2/thumbnail/500%3E',
-        text: '【摘要】在前面，我用了3篇文章解释python的面向对象： 1. "面向对象：从代码复用开始" 2. "面向对象：设置对象属性" 3. "类和对象的名称空间" 本篇是第4篇，用一个完整的示例来解释面向对象的一些细节。 例子的模型是父类Employe和子类Manager，从类的定义开始，一步步完善直到类变得完',
-        url: 'http://www.cnblogs.com/f-ck-need-u/p/10099735.html'
-      }]
+      contents: [],
+      hasMore: true,
+      currentPage: 1
     }
+  },
+  mounted () {
+    this.refresh()
   }
 }
 </script>

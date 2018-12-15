@@ -116,15 +116,25 @@ async function search (data) {
 async function getById (data) {
   const result = await this.$apollo.query({
     query: gql`
-      query($feedId: String!) {
+      query($feedId: String!, $page: Int!, $numPerPage: Int!) {
         user {
           categories {
             name
             feeds(id: $feedId) {
               id
+              publicId
               title
-              articles {
+              articles(page: $page, numPerPage: $numPerPage) {
+                url
                 title
+                published
+                updated
+                later
+                pictureUrl
+                summary
+                content
+                feedId
+                feedTitle
               }
             }
           }
@@ -132,7 +142,9 @@ async function getById (data) {
       }
     `,
     variables: {
-      feedId: data.feedId
+      feedId: data.feedId,
+      page: data.page,
+      numPerPage: data.numPerPage
     },
     fetchPolicy: 'network-only'
   })

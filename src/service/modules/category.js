@@ -68,9 +68,48 @@ async function rename (data) {
   return result
 }
 
+async function getById (data) {
+  const result = await this.$apollo.query({
+    query: gql`
+      query($id: String!, $page: Int!, $numPerPage: Int!) {
+        user {
+          categories (id: $id) {
+            name
+            feeds {
+              id
+              publicId
+              title
+              articles(page: $page, numPerPage: $numPerPage) {
+                url
+                title
+                published
+                pictureUrl
+                updated
+                content
+                later
+                summary
+                feedId
+                feedTitle
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      id: data.id,
+      page: data.page,
+      numPerPage: data.numPerPage
+    },
+    fetchPolicy: 'network-only'
+  })
+  return result
+}
+
 export default {
   update: util.default.wrapper(update),
   add: util.default.wrapper(add),
   rename: util.default.wrapper(rename),
-  remove: util.default.wrapper(remove)
+  remove: util.default.wrapper(remove),
+  getById: util.default.wrapper(getById)
 }

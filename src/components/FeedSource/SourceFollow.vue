@@ -124,6 +124,7 @@ export default {
                 <Button class="remove-btn" type="warning" size="small">移除</Button>
               </div>
             </div>
+            <div v-if="categories.length === 0" class="class-item">没有分类</div>
           </div>
           <Divider/>
           <div @click="switchAdd" class="class-item new-class">

@@ -24,14 +24,18 @@ export default {
     },
 
     selectMenu (name) {
+      let names = name.split('-')
       if (name === 'later' || name === 'home') {
         this.$router.push({ name: name })
       } else if (name.indexOf('-') !== -1) {
-        this.$router.push({ name: 'feed', query: { category: name.split('-')[1] } })
+        if (names.length > 2) {
+          this.$router.push({ name: 'feed', query: { category: names[1], feed: names[2] } })
+        } else {
+          this.$router.push({ name: 'feed', query: { category: names[1] } })
+        }
       }
     },
     menuDown (e, num, i) {
-      // console.log(e)
       e.stopPropagation()
       if (i === -1) {
         this.menuItem.expand = !this.menuItem.expand
@@ -51,7 +55,11 @@ export default {
         }
         if (name === 'feed') {
           if (this.$route.query.category) {
-            this.activeName = 'feed-' + this.$route.query.category
+            if (this.$route.query.feed !== undefined) {
+              this.activeName = 'feed-' + this.$route.query.category + '-' + this.$route.query.feed
+            } else {
+              this.activeName = 'feed-' + this.$route.query.category
+            }
           } else {
             this.activeName = 'feed-0'
           }
@@ -95,10 +103,10 @@ export default {
       width="auto"
       @on-select="selectMenu"
     >
-      <MenuItem class="menu-first" name="home">
+      <!-- <MenuItem class="menu-first" name="home">
         <Icon type="md-clock"></Icon>今日
-      </MenuItem>
-      <MenuItem name="later">
+      </MenuItem> -->
+      <MenuItem name="home">
         <Icon type="md-bookmark"></Icon>稍后阅读
       </MenuItem>
 
@@ -116,7 +124,7 @@ export default {
         />
       </div>
 
-      <MenuItem class="menu-all" :name="'feed-'+menuItem.id">{{menuItem.name}}</MenuItem>
+      <MenuItem class="menu-all" :name="'feed-' + menuItem.id">{{menuItem.name}}</MenuItem>
       <div v-for="(item, index) in categories" :key="item.id">
         <MenuItem class="menu-sub" :name="'feed-' + item.id">
           <Icon
@@ -137,8 +145,8 @@ export default {
           <div v-show="expands[index]">
             <MenuItem
               v-for="feed in item.feeds"
-              :key="feed.id"
-              :name="'feed-'+feed.id"
+              :key="feed.id+item.id"
+              :name="'feed-'+item.id + '-' + feed.id"
               class="menu-sub-sub"
             >{{feed.title}}</MenuItem>
           </div>

@@ -4,7 +4,7 @@ import Home from './views/Home.vue'
 import Index from './views/Index.vue'
 import Login from './views/Login.vue'
 import ReadLater from './views/Home/ReadLater.vue'
-import Today from './views/Home/Today.vue'
+// import Today from './views/Home/Today.vue'
 import Add from './views/Home/Add.vue'
 import Manger from './views/Home/Manger.vue'
 import FeedList from './views/Home/FeedList.vue'
@@ -47,7 +47,7 @@ export default new Router({
       }, {
         path: '',
         name: 'home',
-        component: Today
+        component: ReadLater
       }]
     }
   ]
