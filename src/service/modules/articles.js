@@ -12,7 +12,6 @@ async function popular (data) {
           updated
           pictureUrl
           summary
-          content
           later
           feedId
           feedTitle
@@ -41,7 +40,6 @@ async function getLater (data) {
             pictureUrl
             summary
             later
-            content
             feedId
             feedTitle
           }
@@ -75,7 +73,6 @@ async function getAll (data) {
                 pictureUrl
                 updated
                 summary
-                content
                 later
                 feedId
                 feedTitle

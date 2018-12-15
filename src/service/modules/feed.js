@@ -132,7 +132,6 @@ async function getById (data) {
                 later
                 pictureUrl
                 summary
-                content
                 feedId
                 feedTitle
               }
@@ -167,7 +166,6 @@ async function getByPublicId (data) {
             later
             pictureUrl
             summary
-            content
             feedId
             feedTitle
           }

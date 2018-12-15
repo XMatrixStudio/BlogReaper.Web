@@ -4,6 +4,7 @@
       <nav-bar/>
       <router-view class="router"/>
     </Layout>
+    <BackTop></BackTop>
   </div>
 </template>
 

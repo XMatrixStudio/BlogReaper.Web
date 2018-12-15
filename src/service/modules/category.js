@@ -85,7 +85,6 @@ async function getById (data) {
                 published
                 pictureUrl
                 updated
-                content
                 later
                 summary
                 feedId

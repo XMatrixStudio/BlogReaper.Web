@@ -68,11 +68,13 @@ export default {
     },
 
     updateExpands (categories) {
-      let newExpand = []
-      categories.forEach(() => {
-        newExpand.push(true)
-      })
-      this.expands = newExpand
+      if (this.expands.length !== categories.length) {
+        let newExpand = []
+        categories.forEach(() => {
+          newExpand.push(true)
+        })
+        this.expands = newExpand
+      }
     }
   },
   watch: {
@@ -105,7 +107,7 @@ export default {
     >
       <!-- <MenuItem class="menu-first" name="home">
         <Icon type="md-clock"></Icon>今日
-      </MenuItem> -->
+      </MenuItem>-->
       <MenuItem name="home">
         <Icon type="md-bookmark"></Icon>稍后阅读
       </MenuItem>
@@ -116,7 +118,7 @@ export default {
           @click="gotoManger"
           :class="[{'select-icon' : $route.name === 'manger'},'right-icon']"
           type="md-settings"
-        /> -->
+        />-->
         <Icon
           @click="gotoAdd"
           :class="[{'select-icon' : $route.name === 'add'},'right-icon']"

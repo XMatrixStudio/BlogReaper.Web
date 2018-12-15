@@ -35,7 +35,6 @@
         </Affix>
       </Col>
     </Row>
-    <BackTop></BackTop>
   </div>
 </template>
 

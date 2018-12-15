@@ -34,7 +34,7 @@
             </div>
           </div>
           <!-- <div class="ivu-menu-item">个人设置</div> -->
-          <div class="ivu-menu-item" @click="gotoManger">管理阅读源</div>
+          <!-- <div class="ivu-menu-item" @click="gotoManger">管理阅读源</div> -->
           <div class="ivu-menu-item" @click="logout">退出登陆</div>
         </Submenu>
       </div>
@@ -162,8 +162,9 @@ export default {
         }
       } else if (name === '-1') {
         this.menuSelect = 'home'
+      } else {
+        this.$router.push({ name: name })
       }
-      this.$router.push({ name: name })
     }
   },
   watch: {

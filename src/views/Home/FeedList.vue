@@ -91,7 +91,7 @@ export default {
           this.$Loading.finish()
           if (callback !== undefined) callback()
         })
-      } else if (this.$route.query.feed !== undefined) {
+      } else if (this.$route.query.feed !== undefined) { // 加载Feed
         await this.$service.feed.getById.call(this, {
           feedId: this.$route.query.feed,
           page: 1,
@@ -106,13 +106,16 @@ export default {
           this.$Loading.finish()
           if (callback !== undefined) callback()
         })
-      } else {
+      } else { // 加载Category
         await this.$service.category.getById.call(this, {
           id: this.$route.query.category,
           page: 1,
           numPerPage: 4
         }, (result) => {
           for (let feed of result.data.user.categories[0].feeds) {
+            for (let i in feed.articles) {
+              feed.articles[i].feedTitle = feed.title
+            }
             this.contents.push(...feed.articles)
           }
           this.$Loading.finish()
