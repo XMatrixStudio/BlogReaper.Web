@@ -121,6 +121,7 @@ export default {
       float: right;
       color: rgb(133, 133, 133);
       .btn-bookmark {
+        cursor: pointer;
         font-size: 24px;
         transition: all 0.4s;
         &:hover {
