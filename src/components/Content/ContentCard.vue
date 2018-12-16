@@ -113,7 +113,6 @@ export default {
     }
   }
   .title-text {
-    cursor: pointer;
     font-size: 18px;
     font-weight: bold;
     margin: 15px 0 0 0;
@@ -154,7 +153,6 @@ export default {
     }
   }
   .div-image {
-    cursor: pointer;
     float: left;
     width: 140px;
     position: relative;
@@ -168,7 +166,6 @@ export default {
     }
   }
   .div-text {
-    cursor: pointer;
     color: rgba(0, 0, 0, 0.7);
     margin: 15px 0 0 150px;
     font-size: 14px;
