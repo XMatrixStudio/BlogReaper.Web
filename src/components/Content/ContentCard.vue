@@ -91,7 +91,7 @@ export default {
     <div class="div-image">
       <img class="image" :src="imageUrl">
     </div>
-    <div class="div-text" v-html="htmlText">..</div>
+    <div class="div-text">{{ToText(content.summary)}}</div>
   </div>
 </template>
 

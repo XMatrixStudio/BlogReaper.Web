@@ -75,6 +75,7 @@ export default {
     },
 
     async loadData () {
+      this.currentPage = 1
       await this.$service.feed.getByPublicId.call(this, {
         id: this.sourceData.publicId,
         page: 1,

@@ -1,5 +1,6 @@
 module.exports = {
   baseUrl: '/',
+
   devServer: {
     host: 'localhost',
     proxy: {
@@ -13,5 +14,6 @@ module.exports = {
         }
       }
     }
-  }
+  },
+  productionSourceMap: false
 }

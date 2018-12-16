@@ -69,7 +69,7 @@ export default {
     },
 
     parseUrl (url) {
-      let host = url.substr(url.indexOf('//') + 2).split('/')[0]
+      let host = url.substr(url.indexOf('//') + 1).split('/')[0]
       return host
     }
   }
