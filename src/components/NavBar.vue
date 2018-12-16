@@ -44,6 +44,7 @@
 
 <style lang="scss">
 .nav-bar {
+  min-width: 660px;
   z-index: 999;
   position: fixed;
   width: 100%;
